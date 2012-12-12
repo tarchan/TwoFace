@@ -11,9 +11,25 @@
 
 <AnchorPane id="AnchorPane" prefHeight="768.0" prefWidth="1024.0" styleClass="mainFxmlClass" xmlns:fx="http://javafx.com/fxml" fx:controller="com.mac.tarchan.twoface.TwoFaceController">
   <children>
-    <VBox prefHeight="768.0" prefWidth="1024.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-      <children>
-        <MenuBar useSystemMenuBar="false" VBox.vgrow="NEVER">
+    <BorderPane prefHeight="768.0" prefWidth="1024.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <center>
+        <SplitPane dividerPositions="0.19863013698630136" focusTraversable="true" prefHeight="400.0" prefWidth="600.0">
+          <items>
+            <AnchorPane maxWidth="-Infinity" minHeight="0.0" minWidth="-Infinity" prefHeight="160.0" prefWidth="200.0">
+              <children>
+                <ListView fx:id="thumbnail" prefHeight="398.0" prefWidth="256.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+              </children>
+            </AnchorPane>
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+              <children>
+                <Pagination fx:id="pagination" opacity="1.0" pageCount="2147483647" prefHeight="766.0" prefWidth="816.0" styleClass="bullet" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+              </children>
+            </AnchorPane>
+          </items>
+        </SplitPane>
+      </center>
+      <top>
+        <MenuBar useSystemMenuBar="false">
           <menus>
             <Menu mnemonicParsing="false" text="ファイル(_F)">
               <items>
@@ -78,22 +94,8 @@
             </Menu>
           </menus>
         </MenuBar>
-        <SplitPane dividerPositions="0.19863013698630136" focusTraversable="true" prefHeight="593.0" prefWidth="1024.0" VBox.vgrow="ALWAYS">
-          <items>
-            <AnchorPane maxWidth="-Infinity" minHeight="0.0" minWidth="-Infinity" prefHeight="508.0" prefWidth="200.0">
-              <children>
-                <ListView fx:id="thumbnail" prefHeight="398.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-              </children>
-            </AnchorPane>
-            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
-              <children>
-                <Pagination fx:id="pagination" opacity="1.0" pageCount="2147483647" prefHeight="766.0" prefWidth="816.0" styleClass="bullet" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-              </children>
-            </AnchorPane>
-          </items>
-        </SplitPane>
-      </children>
-    </VBox>
+      </top>
+    </BorderPane>
   </children>
   <stylesheets>
     <URL value="@twoface.css" />
