@@ -46,9 +46,10 @@ import javafx.util.Callback;
  */
 public class TwoFaceController implements Initializable {
 
+    private final Logger log = Logger.getLogger(TwoFaceController.class.getName());
     private FileChooser fileChooser;
     private PDFFile pdfFile;
-    private WritableImage page0, page1;
+//    private WritableImage page0, page1;
     private int origin = 1;
     @FXML
     private ListView<PageItem> thumbnail;
@@ -60,7 +61,9 @@ public class TwoFaceController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        fileChooser = new FileChooser();
+	log.log(Level.INFO, "初期化します。: {0}", url);
+
+	fileChooser = new FileChooser();
         FileChooser.ExtensionFilter pdfFilter = new FileChooser.ExtensionFilter("PDF ファイル (*.pdf)", "*.pdf");
         FileChooser.ExtensionFilter allFilter = new FileChooser.ExtensionFilter("すべてのファイル (*.*)", "*.*");
         fileChooser.getExtensionFilters().add(pdfFilter);
@@ -92,8 +95,8 @@ public class TwoFaceController implements Initializable {
 //            int height = (int) rect.getHeight();
 //            java.awt.Image awtImage = pdfPage.getImage(width, height, rect, null, true, true);
 //            page0 = SwingFXUtils.toFXImage((BufferedImage) awtImage, page0);
-            page0 = getPage(idx - origin, page0);
-            page1 = getPage(idx - origin + 1, page1);
+            Image page0 = getImage(idx - origin, null);
+            Image page1 = getImage(idx - origin + 1, null);
             ImageView view0 = new ImageView(page0);
             view0.setFitHeight(pagination.getHeight());
             view0.setPreserveRatio(true);
@@ -104,8 +107,8 @@ public class TwoFaceController implements Initializable {
             view1.setPreserveRatio(true);
             view1.setSmooth(true);
             view1.setCache(true);
-            box.getChildren().add(view0);
             box.getChildren().add(view1);
+            box.getChildren().add(view0);
         } else {
             Label label = new Label(String.format("%d ページ", idx));
             box.getChildren().add(label);
@@ -113,7 +116,7 @@ public class TwoFaceController implements Initializable {
         return box;
     }
 
-    private WritableImage getPage(int idx, WritableImage image) {
+    private WritableImage getImage(int idx, WritableImage image) {
         idx++;
         if (idx <= 0 || idx > pdfFile.getNumPages()) {
             return null;
@@ -147,7 +150,8 @@ public class TwoFaceController implements Initializable {
             pagination.setPageCount(pdfFile.getNumPages());
 
             ArrayList<PageItem> pages = new ArrayList<>();
-            for (int i = 0; i < pdfFile.getNumPages(); i++) {
+//            for (int i = 0; i < pdfFile.getNumPages(); i++) {
+            for (int i = 1; i < pdfFile.getNumPages(); i += 2) {
                 pages.add(new PageItem(i));
             }
             ObservableList<PageItem> names = FXCollections.observableArrayList(pages);
@@ -190,17 +194,28 @@ public class TwoFaceController implements Initializable {
     }
 }
 
+/**
+ * ページアイテム
+ * 
+ * @author tarchan
+ */
 class PageItem {
 
-    public Image image;
-    public String name;
+    /** ページ番号 */
     public int value;
+
+    /** ページ名 */
+    public String name;
+
+    /** サムネール */
+    public Image image;
 
     public PageItem(int idx) {
         value = idx;
         name = String.format("%,d ページ", idx + 1);
     }
 
+    /** 文字列表現 */
     @Override
     public String toString() {
         return name;

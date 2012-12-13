@@ -13,51 +13,57 @@
   <children>
     <VBox prefHeight="768.0" prefWidth="1024.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <children>
-        <MenuBar useSystemMenuBar="false" VBox.vgrow="NEVER">
+        <MenuBar useSystemMenuBar="true" VBox.vgrow="NEVER">
           <menus>
-            <Menu mnemonicParsing="false" text="ファイル(_F)">
+            <Menu mnemonicParsing="false" text="ファイル">
               <items>
                 <MenuItem id="" mnemonicParsing="false" onAction="#handleOpen" text="開く...">
                   <accelerator>
-                    <KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                    <KeyCodeCombination alt="UP" code="O" control="UP" meta="DOWN" shift="UP" shortcut="UP" />
                   </accelerator>
                 </MenuItem>
                 <MenuItem id="" mnemonicParsing="false" onAction="#handleExit" text="終了">
                   <accelerator>
-                    <KeyCodeCombination alt="UP" code="X" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                    <KeyCodeCombination alt="UP" code="Q" control="UP" meta="DOWN" shift="UP" shortcut="UP" />
                   </accelerator>
                 </MenuItem>
               </items>
             </Menu>
-            <Menu mnemonicParsing="false" text="編集(_E)">
+            <Menu disable="true" mnemonicParsing="false" text="編集">
               <items>
-                <MenuItem mnemonicParsing="false" text="コピー">
+                <MenuItem disable="true" mnemonicParsing="false" text="コピー">
                   <accelerator>
-                    <KeyCodeCombination alt="UP" code="C" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                    <KeyCodeCombination alt="UP" code="C" control="UP" meta="DOWN" shift="UP" shortcut="UP" />
+                  </accelerator>
+                </MenuItem>
+                <SeparatorMenuItem mnemonicParsing="false" />
+                <MenuItem mnemonicParsing="false" text="環境設定">
+                  <accelerator>
+                    <KeyCodeCombination alt="UP" code="COMMA" control="UP" meta="DOWN" shift="UP" shortcut="UP" />
                   </accelerator>
                 </MenuItem>
               </items>
             </Menu>
-            <Menu mnemonicParsing="false" text="表示(_V)">
+            <Menu disable="true" mnemonicParsing="false" text="表示">
               <items>
                 <MenuItem mnemonicParsing="false" onAction="#handleFirst" text="最初のページ">
                   <accelerator>
-                    <KeyCodeCombination alt="UP" code="HOME" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                    <KeyCodeCombination alt="UP" code="HOME" control="UP" meta="DOWN" shift="UP" shortcut="UP" />
                   </accelerator>
                 </MenuItem>
                 <MenuItem mnemonicParsing="false" onAction="#handlePrev" text="前のページ">
                   <accelerator>
-                    <KeyCodeCombination alt="UP" code="UP" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                    <KeyCodeCombination alt="UP" code="UP" control="UP" meta="DOWN" shift="UP" shortcut="UP" />
                   </accelerator>
                 </MenuItem>
                 <MenuItem mnemonicParsing="false" onAction="#handleNext" text="次のページ">
                   <accelerator>
-                    <KeyCodeCombination alt="UP" code="DOWN" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                    <KeyCodeCombination alt="UP" code="DOWN" control="UP" meta="DOWN" shift="UP" shortcut="UP" />
                   </accelerator>
                 </MenuItem>
                 <MenuItem mnemonicParsing="false" onAction="#handleLast" text="最後のページ">
                   <accelerator>
-                    <KeyCodeCombination alt="UP" code="END" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                    <KeyCodeCombination alt="UP" code="END" control="UP" meta="DOWN" shift="UP" shortcut="UP" />
                   </accelerator>
                 </MenuItem>
                 <SeparatorMenuItem mnemonicParsing="false" />
@@ -71,7 +77,7 @@
                 <CheckMenuItem mnemonicParsing="false" text="左綴じ" />
               </items>
             </Menu>
-            <Menu mnemonicParsing="false" text="ヘルプ(_H)">
+            <Menu disable="true" mnemonicParsing="false" text="ヘルプ">
               <items>
                 <MenuItem mnemonicParsing="false" text="バージョン情報" />
               </items>
