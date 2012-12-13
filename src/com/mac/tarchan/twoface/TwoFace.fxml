@@ -29,57 +29,57 @@
                 </MenuItem>
               </items>
             </Menu>
-            <Menu disable="true" mnemonicParsing="false" text="編集">
+            <Menu disable="false" mnemonicParsing="false" text="編集">
               <items>
                 <MenuItem disable="true" mnemonicParsing="false" text="コピー">
                   <accelerator>
                     <KeyCodeCombination alt="UP" code="C" control="UP" meta="DOWN" shift="UP" shortcut="UP" />
                   </accelerator>
                 </MenuItem>
-                <SeparatorMenuItem mnemonicParsing="false" />
-                <MenuItem mnemonicParsing="false" text="環境設定">
+                <SeparatorMenuItem disable="false" mnemonicParsing="false" />
+                <MenuItem disable="true" mnemonicParsing="false" text="環境設定">
                   <accelerator>
                     <KeyCodeCombination alt="UP" code="COMMA" control="UP" meta="DOWN" shift="UP" shortcut="UP" />
                   </accelerator>
                 </MenuItem>
               </items>
             </Menu>
-            <Menu disable="true" mnemonicParsing="false" text="表示">
+            <Menu disable="false" mnemonicParsing="false" text="表示">
               <items>
-                <MenuItem mnemonicParsing="false" onAction="#handleFirst" text="最初のページ">
+                <MenuItem disable="false" mnemonicParsing="false" onAction="#handleFirst" text="最初のページ">
                   <accelerator>
                     <KeyCodeCombination alt="UP" code="HOME" control="UP" meta="DOWN" shift="UP" shortcut="UP" />
                   </accelerator>
                 </MenuItem>
-                <MenuItem mnemonicParsing="false" onAction="#handlePrev" text="前のページ">
+                <MenuItem disable="false" mnemonicParsing="false" onAction="#handlePrev" text="前のページ">
                   <accelerator>
                     <KeyCodeCombination alt="UP" code="UP" control="UP" meta="DOWN" shift="UP" shortcut="UP" />
                   </accelerator>
                 </MenuItem>
-                <MenuItem mnemonicParsing="false" onAction="#handleNext" text="次のページ">
+                <MenuItem disable="false" mnemonicParsing="false" onAction="#handleNext" text="次のページ">
                   <accelerator>
                     <KeyCodeCombination alt="UP" code="DOWN" control="UP" meta="DOWN" shift="UP" shortcut="UP" />
                   </accelerator>
                 </MenuItem>
-                <MenuItem mnemonicParsing="false" onAction="#handleLast" text="最後のページ">
+                <MenuItem disable="false" mnemonicParsing="false" onAction="#handleLast" text="最後のページ">
                   <accelerator>
                     <KeyCodeCombination alt="UP" code="END" control="UP" meta="DOWN" shift="UP" shortcut="UP" />
                   </accelerator>
                 </MenuItem>
                 <SeparatorMenuItem mnemonicParsing="false" />
-                <CheckMenuItem mnemonicParsing="false" text="単一ページ" />
-                <CheckMenuItem mnemonicParsing="false" selected="true" text="見開きページ" />
+                <CheckMenuItem disable="false" mnemonicParsing="false" text="単一ページ" />
+                <CheckMenuItem disable="false" mnemonicParsing="false" selected="true" text="見開きページ" />
                 <SeparatorMenuItem mnemonicParsing="false" />
-                <CheckMenuItem mnemonicParsing="false" selected="true" text="表紙あり" />
-                <CheckMenuItem mnemonicParsing="false" text="表紙なし" />
+                <CheckMenuItem disable="false" mnemonicParsing="false" selected="true" text="表紙あり" />
+                <CheckMenuItem disable="false" mnemonicParsing="false" text="表紙なし" />
                 <SeparatorMenuItem mnemonicParsing="false" />
-                <CheckMenuItem mnemonicParsing="false" selected="true" text="右綴じ" />
-                <CheckMenuItem mnemonicParsing="false" text="左綴じ" />
+                <CheckMenuItem disable="false" mnemonicParsing="false" selected="true" text="右綴じ" />
+                <CheckMenuItem disable="false" mnemonicParsing="false" text="左綴じ" />
               </items>
             </Menu>
-            <Menu disable="true" mnemonicParsing="false" text="ヘルプ">
+            <Menu disable="false" mnemonicParsing="false" text="ヘルプ">
               <items>
-                <MenuItem mnemonicParsing="false" text="バージョン情報" />
+                <MenuItem disable="true" mnemonicParsing="false" text="バージョン情報" />
               </items>
             </Menu>
           </menus>

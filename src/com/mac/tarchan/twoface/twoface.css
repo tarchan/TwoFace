@@ -5,3 +5,12 @@
 .mainFxmlClass {
 
 }
+
+.border {
+    -fx-border-color: black;
+    -fx-border-width: 3;
+}
+
+.pagination .page {
+    -fx-background-color: #DDF1F8;
+}
