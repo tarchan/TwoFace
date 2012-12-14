@@ -1,6 +1,17 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright 2012 Takashi Ogura <tarchan at mac.com>.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package com.mac.tarchan.twoface;
 
@@ -42,7 +53,7 @@ import javafx.util.Callback;
 /**
  * FXML Controller class
  *
- * @author tarchan
+ * @author Takashi Ogura <tarchan at mac.com>
  */
 public class TwoFaceController implements Initializable {
 
@@ -61,138 +72,138 @@ public class TwoFaceController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-	log.log(Level.INFO, "初期化します。: {0}", url);
+        log.log(Level.INFO, "初期化します。: {0}", url);
 
-	fileChooser = new FileChooser();
-	FileChooser.ExtensionFilter pdfFilter = new FileChooser.ExtensionFilter("PDF ファイル (*.pdf)", "*.pdf");
-	FileChooser.ExtensionFilter allFilter = new FileChooser.ExtensionFilter("すべてのファイル (*.*)", "*.*");
-	fileChooser.getExtensionFilters().add(pdfFilter);
-	fileChooser.getExtensionFilters().add(allFilter);
+        fileChooser = new FileChooser();
+        FileChooser.ExtensionFilter pdfFilter = new FileChooser.ExtensionFilter("PDF ファイル (*.pdf)", "*.pdf");
+        FileChooser.ExtensionFilter allFilter = new FileChooser.ExtensionFilter("すべてのファイル (*.*)", "*.*");
+        fileChooser.getExtensionFilters().add(pdfFilter);
+        fileChooser.getExtensionFilters().add(allFilter);
 
-	pagination.setPageFactory(new Callback<Integer, Node>() {
-	    @Override
-	    public Node call(Integer idx) {
-		return createPage(idx);
-	    }
-	});
+        pagination.setPageFactory(new Callback<Integer, Node>() {
+            @Override
+            public Node call(Integer idx) {
+                return createPage(idx);
+            }
+        });
         pagination.setPageCount(1);
 
-	MultipleSelectionModel<PageItem> model = thumbnail.getSelectionModel();
-	model.selectedItemProperty().addListener(new ChangeListener<PageItem>() {
-	    @Override
-	    public void changed(ObservableValue<? extends PageItem> property, PageItem oldValue, PageItem newValue) {
-		onChanged(property, oldValue, newValue);
-	    }
-	});
+        MultipleSelectionModel<PageItem> model = thumbnail.getSelectionModel();
+        model.selectedItemProperty().addListener(new ChangeListener<PageItem>() {
+            @Override
+            public void changed(ObservableValue<? extends PageItem> property, PageItem oldValue, PageItem newValue) {
+                onChanged(property, oldValue, newValue);
+            }
+        });
     }
 
     private Node createPage(Integer idx) {
-	log.log(Level.INFO, "createPage: {0} ページ", idx + 1);
-	HBox box = new HBox();
-	if (pdfFile != null) {
+        log.log(Level.INFO, "createPage: {0} ページ", idx + 1);
+        HBox box = new HBox();
+        if (pdfFile != null) {
 //            PDFPage pdfPage = pdfFile.getPage(idx + 1);
 //            Rectangle2D rect = pdfPage.getBBox();
 //            int width = (int) rect.getWidth();
 //            int height = (int) rect.getHeight();
 //            java.awt.Image awtImage = pdfPage.getImage(width, height, rect, null, true, true);
 //            page0 = SwingFXUtils.toFXImage((BufferedImage) awtImage, page0);
-	    Image page0 = getImage(idx - origin, null);
-	    Image page1 = getImage(idx - origin + 1, null);
-	    ImageView view0 = new ImageView(page0);
-	    view0.setFitHeight(pagination.getHeight());
-	    view0.setPreserveRatio(true);
-	    view0.setSmooth(true);
-	    view0.setCache(true);
-	    ImageView view1 = new ImageView(page1);
-	    view1.setFitHeight(pagination.getHeight());
-	    view1.setPreserveRatio(true);
-	    view1.setSmooth(true);
-	    view1.setCache(true);
-	    box.getChildren().add(view1);
-	    box.getChildren().add(view0);
-	} else {
+            Image page0 = getImage(idx - origin, null);
+            Image page1 = getImage(idx - origin + 1, null);
+            ImageView view0 = new ImageView(page0);
+            view0.setFitHeight(pagination.getHeight());
+            view0.setPreserveRatio(true);
+            view0.setSmooth(true);
+            view0.setCache(true);
+            ImageView view1 = new ImageView(page1);
+            view1.setFitHeight(pagination.getHeight());
+            view1.setPreserveRatio(true);
+            view1.setSmooth(true);
+            view1.setCache(true);
+            box.getChildren().add(view1);
+            box.getChildren().add(view0);
+        } else {
 //            Label label = new Label(String.format("%d ページ", idx));
-	    Label label = new Label("ファイルを選択してください。");
-	    box.getChildren().add(label);
-	}
-	return box;
+            Label label = new Label("ファイルを選択してください。");
+            box.getChildren().add(label);
+        }
+        return box;
     }
 
     private WritableImage getImage(int idx, WritableImage image) {
-	idx++;
-	if (idx <= 0 || idx > pdfFile.getNumPages()) {
-	    return null;
-	}
-	PDFPage pdfPage = pdfFile.getPage(idx);
-	Rectangle2D rect = pdfPage.getBBox();
-	int width = (int) rect.getWidth();
-	int height = (int) rect.getHeight();
-	java.awt.Image awtImage = pdfPage.getImage(width, height, rect, null, true, true);
-	image = SwingFXUtils.toFXImage((BufferedImage) awtImage, image);
-	return image;
+        idx++;
+        if (idx <= 0 || idx > pdfFile.getNumPages()) {
+            return null;
+        }
+        PDFPage pdfPage = pdfFile.getPage(idx);
+        Rectangle2D rect = pdfPage.getBBox();
+        int width = (int) rect.getWidth();
+        int height = (int) rect.getHeight();
+        java.awt.Image awtImage = pdfPage.getImage(width, height, rect, null, true, true);
+        image = SwingFXUtils.toFXImage((BufferedImage) awtImage, image);
+        return image;
     }
 
     private void onChanged(ObservableValue<? extends PageItem> property, PageItem oldValue, PageItem newValue) {
-	log.log(Level.INFO, "onChanged: {0}, {1} -> {2}", new Object[]{property, oldValue, newValue});
-	int idx = newValue.value;
-	pagination.currentPageIndexProperty().setValue(idx);
+        log.log(Level.INFO, "onChanged: {0}, {1} -> {2}", new Object[]{property, oldValue, newValue});
+        int idx = newValue.value;
+        pagination.currentPageIndexProperty().setValue(idx);
     }
 
     @FXML
     private void handleOpen(ActionEvent event) {
-	try {
-	    log.log(Level.INFO, "ファイルを選択します。");
-	    File file = fileChooser.showOpenDialog(null);
-	    log.log(Level.INFO, "ファイルを開きます。: {0}", file);
-	    RandomAccessFile read = new RandomAccessFile(file, "r");
-	    FileChannel channel = read.getChannel();
-	    ByteBuffer buf = channel.map(FileChannel.MapMode.READ_ONLY, 0, channel.size());
-	    pdfFile = new PDFFile(buf);
+        try {
+            log.log(Level.INFO, "ファイルを選択します。");
+            File file = fileChooser.showOpenDialog(null);
+            log.log(Level.INFO, "ファイルを開きます。: {0}", file);
+            RandomAccessFile read = new RandomAccessFile(file, "r");
+            FileChannel channel = read.getChannel();
+            ByteBuffer buf = channel.map(FileChannel.MapMode.READ_ONLY, 0, channel.size());
+            pdfFile = new PDFFile(buf);
 
-	    pagination.setPageCount(pdfFile.getNumPages());
+            pagination.setPageCount(pdfFile.getNumPages());
 
-	    ArrayList<PageItem> pages = new ArrayList<>();
-	    for (int i = 1; i < pdfFile.getNumPages(); i += 2) {
-		pages.add(new PageItem(i));
-	    }
-	    ObservableList<PageItem> names = FXCollections.observableArrayList(pages);
-	    thumbnail.setItems(names);
-	    thumbnail.getSelectionModel().select(0);
-	} catch (IOException ex) {
-	    log.log(Level.SEVERE, "PDF ファイルを読み込めません。", ex);
-	}
+            ArrayList<PageItem> pages = new ArrayList<>();
+            for (int i = 1; i < pdfFile.getNumPages(); i += 2) {
+                pages.add(new PageItem(i));
+            }
+            ObservableList<PageItem> names = FXCollections.observableArrayList(pages);
+            thumbnail.setItems(names);
+            thumbnail.getSelectionModel().select(0);
+        } catch (IOException ex) {
+            log.log(Level.SEVERE, "PDF ファイルを読み込めません。", ex);
+        }
     }
 
     @FXML
     private void handleExit(ActionEvent event) {
-	log.log(Level.INFO, "アプリケーションを終了します。");
-	Platform.exit();
+        log.log(Level.INFO, "アプリケーションを終了します。");
+        Platform.exit();
     }
 
     @FXML
     private void handleFirst(ActionEvent event) {
-	log.log(Level.INFO, "最初のページ: {0}", 0);
-	pagination.currentPageIndexProperty().setValue(0);
+        log.log(Level.INFO, "最初のページ: {0}", 0);
+        pagination.currentPageIndexProperty().setValue(0);
     }
 
     @FXML
     private void handlePrev(ActionEvent event) {
-	int idx = pagination.currentPageIndexProperty().getValue() - 2;
-	log.log(Level.INFO, "前のページ: {0}", idx);
-	pagination.currentPageIndexProperty().setValue(idx);
+        int idx = pagination.currentPageIndexProperty().getValue() - 2;
+        log.log(Level.INFO, "前のページ: {0}", idx);
+        pagination.currentPageIndexProperty().setValue(idx);
     }
 
     @FXML
     private void handleNext(ActionEvent event) {
-	int idx = pagination.currentPageIndexProperty().getValue() + 2;
-	log.log(Level.INFO, "次のページ: {0}", idx);
-	pagination.currentPageIndexProperty().setValue(idx);
+        int idx = pagination.currentPageIndexProperty().getValue() + 2;
+        log.log(Level.INFO, "次のページ: {0}", idx);
+        pagination.currentPageIndexProperty().setValue(idx);
     }
 
     @FXML
     private void handleLast(ActionEvent event) {
-	log.log(Level.INFO, "最後のページ: {0}", pagination.getPageCount());
-	pagination.currentPageIndexProperty().setValue(pagination.getPageCount());
+        log.log(Level.INFO, "最後のページ: {0}", pagination.getPageCount());
+        pagination.currentPageIndexProperty().setValue(pagination.getPageCount());
     }
 }
 
@@ -217,8 +228,8 @@ class PageItem {
     public Image image;
 
     public PageItem(int idx) {
-	value = idx;
-	name = String.format("%,d ページ", idx + 1);
+        value = idx;
+        name = String.format("%,d ページ", idx + 1);
     }
 
     /**
@@ -226,6 +237,6 @@ class PageItem {
      */
     @Override
     public String toString() {
-	return name;
+        return name;
     }
 }
