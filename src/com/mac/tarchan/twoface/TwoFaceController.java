@@ -97,38 +97,51 @@ public class TwoFaceController implements Initializable {
         });
     }
 
+    /**
+     * Pagination で表示する Node を返します。
+     *
+     * @param idx ページ番号 (0 オリジン)
+     * @return Pagination で表示する Node
+     */
     private Node createPage(Integer idx) {
         log.log(Level.INFO, "createPage: {0} ページ", idx + 1);
-        HBox box = new HBox();
-        if (pdfFile != null) {
-//            PDFPage pdfPage = pdfFile.getPage(idx + 1);
-//            Rectangle2D rect = pdfPage.getBBox();
-//            int width = (int) rect.getWidth();
-//            int height = (int) rect.getHeight();
-//            java.awt.Image awtImage = pdfPage.getImage(width, height, rect, null, true, true);
-//            page0 = SwingFXUtils.toFXImage((BufferedImage) awtImage, page0);
-            Image page0 = getImage(idx - origin, null);
-            Image page1 = getImage(idx - origin + 1, null);
-            ImageView view0 = new ImageView(page0);
-            view0.setFitHeight(pagination.getHeight());
-            view0.setPreserveRatio(true);
-            view0.setSmooth(true);
-            view0.setCache(true);
-            ImageView view1 = new ImageView(page1);
-            view1.setFitHeight(pagination.getHeight());
-            view1.setPreserveRatio(true);
-            view1.setSmooth(true);
-            view1.setCache(true);
-            box.getChildren().add(view1);
-            box.getChildren().add(view0);
-        } else {
-//            Label label = new Label(String.format("%d ページ", idx));
+
+        HBox hbox = new HBox();
+
+        if (pdfFile == null) {
             Label label = new Label("ファイルを選択してください。");
-            box.getChildren().add(label);
+            hbox.getChildren().add(label);
+            return hbox;
         }
-        return box;
+
+        Image page0 = getImage(idx - origin, null);
+        Image page1 = getImage(idx - origin + 1, null);
+
+        ImageView view0 = new ImageView(page0);
+        view0.setFitWidth(pagination.getWidth() / 2);
+        view0.setPreserveRatio(true);
+        view0.setSmooth(true);
+        view0.setCache(true);
+
+        ImageView view1 = new ImageView(page1);
+        view1.setFitWidth(pagination.getWidth() / 2);
+        view1.setPreserveRatio(true);
+        view1.setSmooth(true);
+        view1.setCache(true);
+
+        hbox.getChildren().add(view1);
+        hbox.getChildren().add(view0);
+        return hbox;
     }
 
+    /**
+     * 指定されたページ番号のイメージを返します。
+     * 
+     * @param idx ページ番号
+     * @param image イメージ
+     * @return イメージ
+     * @see SwingFXUtils#toFXImage(java.awt.image.BufferedImage, javafx.scene.image.WritableImage) 
+     */
     private WritableImage getImage(int idx, WritableImage image) {
         idx++;
         if (idx <= 0 || idx > pdfFile.getNumPages()) {
@@ -143,6 +156,13 @@ public class TwoFaceController implements Initializable {
         return image;
     }
 
+    /**
+     * サムネールで選択されたページを表示します。
+     * 
+     * @param property プロパティ
+     * @param oldValue 古い値
+     * @param newValue 新しい値
+     */
     private void onChanged(ObservableValue<? extends PageItem> property, PageItem oldValue, PageItem newValue) {
         log.log(Level.INFO, "onChanged: {0}, {1} -> {2}", new Object[]{property, oldValue, newValue});
         int idx = newValue.value;
