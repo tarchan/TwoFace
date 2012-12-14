@@ -75,6 +75,7 @@ public class TwoFaceController implements Initializable {
 		return createPage(idx);
 	    }
 	});
+        pagination.setPageCount(1);
 
 	MultipleSelectionModel<PageItem> model = thumbnail.getSelectionModel();
 	model.selectedItemProperty().addListener(new ChangeListener<PageItem>() {
