@@ -39,6 +39,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MultipleSelectionModel;
@@ -46,7 +47,9 @@ import javafx.scene.control.Pagination;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.stage.FileChooser;
 import javafx.util.Callback;
 
@@ -99,34 +102,49 @@ public class TwoFaceController implements Initializable {
 
     private Node createPage(Integer idx) {
         log.log(Level.INFO, "createPage: {0} ページ", idx + 1);
-        HBox box = new HBox();
-        if (pdfFile != null) {
+
+        HBox hbox = new HBox();
+        hbox.setFillHeight(true);
+        AnchorPane.setTopAnchor(hbox, 0d);
+        AnchorPane.setLeftAnchor(hbox, 0d);
+        AnchorPane.setBottomAnchor(hbox, 0d);
+        AnchorPane.setRightAnchor(hbox, 0d);
+//        hbox.setStyle("-fx-background-color: navy");
+
+        if (pdfFile == null) {
+//            Label label = new Label(String.format("%d ページ", idx));
+            Label label = new Label("ファイルを選択してください。");
+            hbox.getChildren().add(label);
+            return hbox;
+        }
+
 //            PDFPage pdfPage = pdfFile.getPage(idx + 1);
 //            Rectangle2D rect = pdfPage.getBBox();
 //            int width = (int) rect.getWidth();
 //            int height = (int) rect.getHeight();
 //            java.awt.Image awtImage = pdfPage.getImage(width, height, rect, null, true, true);
 //            page0 = SwingFXUtils.toFXImage((BufferedImage) awtImage, page0);
-            Image page0 = getImage(idx - origin, null);
-            Image page1 = getImage(idx - origin + 1, null);
-            ImageView view0 = new ImageView(page0);
-            view0.setFitHeight(pagination.getHeight());
-            view0.setPreserveRatio(true);
-            view0.setSmooth(true);
-            view0.setCache(true);
-            ImageView view1 = new ImageView(page1);
-            view1.setFitHeight(pagination.getHeight());
-            view1.setPreserveRatio(true);
-            view1.setSmooth(true);
-            view1.setCache(true);
-            box.getChildren().add(view1);
-            box.getChildren().add(view0);
-        } else {
-//            Label label = new Label(String.format("%d ページ", idx));
-            Label label = new Label("ファイルを選択してください。");
-            box.getChildren().add(label);
-        }
-        return box;
+        Image page0 = getImage(idx - origin, null);
+        Image page1 = getImage(idx - origin + 1, null);
+        ImageView view0 = new ImageView(page0);
+        view0.setFitHeight(Control.USE_COMPUTED_SIZE);
+        view0.setPreserveRatio(true);
+        view0.setSmooth(true);
+//            view0.setCache(true);
+        ImageView view1 = new ImageView(page1);
+            view1.setFitHeight(Control.USE_COMPUTED_SIZE);
+        view1.setPreserveRatio(true);
+        view1.setSmooth(true);
+//            view1.setCache(true);
+//            AnchorPane.setTopAnchor(view0, 0d);
+//            AnchorPane.setLeftAnchor(view0, 0d);
+//            AnchorPane.setBottomAnchor(view0, 0d);
+//            AnchorPane.setRightAnchor(view0, 0d);
+        HBox.setHgrow(view0, Priority.ALWAYS);
+        HBox.setHgrow(view1, Priority.ALWAYS);
+        hbox.getChildren().add(view1);
+        hbox.getChildren().add(view0);
+        return hbox;
     }
 
     private WritableImage getImage(int idx, WritableImage image) {
