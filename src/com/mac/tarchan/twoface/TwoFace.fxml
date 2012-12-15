@@ -22,6 +22,7 @@
                     <KeyCodeCombination alt="UP" code="O" control="UP" meta="DOWN" shift="UP" shortcut="UP" />
                   </accelerator>
                 </MenuItem>
+                <SeparatorMenuItem mnemonicParsing="false" />
                 <MenuItem id="" mnemonicParsing="false" onAction="#handleExit" text="終了">
                   <accelerator>
                     <KeyCodeCombination alt="UP" code="Q" control="UP" meta="DOWN" shift="UP" shortcut="UP" />
@@ -67,14 +68,26 @@
                   </accelerator>
                 </MenuItem>
                 <SeparatorMenuItem mnemonicParsing="false" />
-                <CheckMenuItem disable="false" mnemonicParsing="false" text="単一ページ" />
-                <CheckMenuItem disable="false" mnemonicParsing="false" selected="true" text="見開きページ" />
+                <RadioMenuItem mnemonicParsing="false" text="単一ページ">
+                  <toggleGroup>
+                    <ToggleGroup fx:id="faceGroup" />
+                  </toggleGroup>
+                </RadioMenuItem>
+                <RadioMenuItem mnemonicParsing="false" selected="true" text="見開きページ" toggleGroup="$faceGroup" />
                 <SeparatorMenuItem mnemonicParsing="false" />
-                <CheckMenuItem disable="false" mnemonicParsing="false" selected="true" text="表紙あり" />
-                <CheckMenuItem disable="false" mnemonicParsing="false" text="表紙なし" />
+                <RadioMenuItem mnemonicParsing="false" selected="false" text="表紙なし">
+                  <toggleGroup>
+                    <ToggleGroup fx:id="originGroup" />
+                  </toggleGroup>
+                </RadioMenuItem>
+                <RadioMenuItem mnemonicParsing="false" selected="true" text="表紙あり" toggleGroup="$originGroup" />
                 <SeparatorMenuItem mnemonicParsing="false" />
-                <CheckMenuItem disable="false" mnemonicParsing="false" selected="true" text="右綴じ" />
-                <CheckMenuItem disable="false" mnemonicParsing="false" text="左綴じ" />
+                <RadioMenuItem mnemonicParsing="false" text="左綴じ">
+                  <toggleGroup>
+                    <ToggleGroup fx:id="directionGroup" />
+                  </toggleGroup>
+                </RadioMenuItem>
+                <RadioMenuItem mnemonicParsing="false" selected="true" text="右綴じ" toggleGroup="$directionGroup" />
               </items>
             </Menu>
             <Menu disable="false" mnemonicParsing="false" text="ヘルプ">
