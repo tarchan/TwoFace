@@ -116,8 +116,8 @@ public class TwoFaceController implements Initializable {
             return hbox;
         }
 
-        Image page0 = getImage(idx - origin, null);
-        Image page1 = getImage(idx - origin + 1, null);
+        Image page0 = getImage(idx - origin);
+        Image page1 = getImage(idx - origin + 1);
 
         ImageView view0 = new ImageView(page0);
         view0.setFitWidth(pagination.getWidth() / 2);
@@ -139,23 +139,22 @@ public class TwoFaceController implements Initializable {
     /**
      * 指定されたページ番号のイメージを返します。
      *
-     * @param idx ページ番号
-     * @param image イメージ
+     * @param page ページ番号
      * @return イメージ
      * @see SwingFXUtils#toFXImage(java.awt.image.BufferedImage,
      * javafx.scene.image.WritableImage)
      */
-    private WritableImage getImage(int idx, WritableImage image) {
-        idx++;
-        if (idx <= 0 || idx > pdfFile.getNumPages()) {
+    private Image getImage(int page) {
+        page++;
+        if (page <= 0 || page > pdfFile.getNumPages()) {
             return null;
         }
-        PDFPage pdfPage = pdfFile.getPage(idx);
+        PDFPage pdfPage = pdfFile.getPage(page);
         Rectangle2D rect = pdfPage.getBBox();
         int width = (int) rect.getWidth();
         int height = (int) rect.getHeight();
         java.awt.Image awtImage = pdfPage.getImage(width, height, rect, null, true, true);
-        image = SwingFXUtils.toFXImage((BufferedImage) awtImage, image);
+        Image image = SwingFXUtils.toFXImage((BufferedImage) awtImage, null);
         return image;
     }
 
