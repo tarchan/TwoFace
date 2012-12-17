@@ -54,7 +54,7 @@ public class TwoFaceController implements Initializable {
     private static final Logger log = Logger.getLogger(TwoFaceController.class.getName());
     private FileChooser fileChooser;
     private Book book;
-    private int origin = 1;
+    private int origin = 0;
     @FXML
     private ListView<PageItem> thumbnail;
     @FXML
@@ -97,7 +97,7 @@ public class TwoFaceController implements Initializable {
      * @return Pagination で表示する Node
      */
     private Node createPage(Integer idx) {
-        log.log(Level.INFO, "createPage: {0} ページ", idx + 1);
+        log.log(Level.INFO, "createPage: {0} ページ", idx);
 
         HBox hbox = new HBox();
 
@@ -178,9 +178,12 @@ public class TwoFaceController implements Initializable {
             pagination.setPageCount(book.getPageCount());
 
             ArrayList<PageItem> pages = new ArrayList<>();
-            for (int i = 1; i < book.getPageCount(); i += 2) {
+             for (int i = 0; i < book.getPageCount(); i += 1) {
                 pages.add(new PageItem(i));
             }
+//            for (int i = 1; i < book.getPageCount(); i += 2) {
+//                pages.add(new PageItem(i));
+//            }
             ObservableList<PageItem> names = FXCollections.observableArrayList(pages);
             thumbnail.setItems(names);
             thumbnail.getSelectionModel().select(0);
@@ -242,9 +245,9 @@ class PageItem {
      */
     public Image image;
 
-    public PageItem(int idx) {
-        value = idx;
-        name = String.format("%,d ページ", idx + 1);
+    public PageItem(int page) {
+        value = page;
+        name = page != 0 ? String.format("%,d ページ", page) : "表紙";
     }
 
     /**

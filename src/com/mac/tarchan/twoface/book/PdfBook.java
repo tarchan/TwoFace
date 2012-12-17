@@ -51,7 +51,7 @@ public class PdfBook implements Book {
 
     @Override
     public Image getImage(int page) {
-        page++;
+//        page++;
         if (page <= 0 || page > pdfFile.getNumPages()) {
             return null;
         }
