@@ -202,6 +202,7 @@ public class TwoFaceController implements Initializable {
             ObservableList<PageItem> names = FXCollections.observableArrayList(pages);
             thumbnail.setItems(names);
             thumbnail.getSelectionModel().select(0);
+            thumbnail.requestFocus();
         } catch (IOException ex) {
             log.log(Level.SEVERE, "PDF ファイルを読み込めません。", ex);
         }
