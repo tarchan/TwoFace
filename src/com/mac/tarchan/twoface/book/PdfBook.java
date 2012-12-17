@@ -30,7 +30,7 @@ import javafx.scene.image.Image;
 
 /**
  * PDF のイメージを返すクラスです。
- * 
+ *
  * @author Takashi Ogura <tarchan at mac.com>
  */
 public class PdfBook implements Book {
@@ -51,10 +51,10 @@ public class PdfBook implements Book {
 
     @Override
     public Image getImage(int page) {
-//        page++;
-        if (page <= 0 || page > pdfFile.getNumPages()) {
+        if (page < 0 || page >= getPageCount()) {
             return null;
         }
+        page++;
         PDFPage pdfPage = pdfFile.getPage(page);
         Rectangle2D rect = pdfPage.getBBox();
         int width = (int) rect.getWidth();

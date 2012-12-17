@@ -124,8 +124,8 @@ public class TwoFaceController implements Initializable {
             return hbox;
         }
 
-        Image page0 = book.getImage(index + origin);
-        Image page1 = book.getImage(index + origin + 1);
+        Image page0 = book.getImage(index + origin - 1);
+        Image page1 = book.getImage(index + origin);
 
         ImageView view0 = new ImageView(page0);
         view0.setFitWidth(pagination.getWidth() / 2);
@@ -194,11 +194,13 @@ public class TwoFaceController implements Initializable {
             log.log(Level.INFO, "ファイルを開きます。: {0}", file);
             book = BookFactory.getBook(file);
 
-            pagination.setPageCount(book.getPageCount());
+            int pageCount = book.getPageCount() / 2 * 2 + 1;
+            log.log(Level.INFO, "ページ数: {0} ({1})", new Object[]{book.getPageCount(), pageCount});
+            pagination.setPageCount(pageCount);
 
             ArrayList<PageItem> pages = new ArrayList<>();
             origin = withCover.isSelected() ? 0 : 1;
-            for (int i = 0; i < book.getPageCount(); i += 2) {
+            for (int i = 0; i < pageCount; i += 2) {
                 pages.add(new PageItem(i, origin));
             }
             ObservableList<PageItem> names = FXCollections.observableArrayList(pages);

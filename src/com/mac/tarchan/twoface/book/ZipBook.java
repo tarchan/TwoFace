@@ -56,6 +56,9 @@ public class ZipBook implements Book {
     @Override
     public Image getImage(int page) {
         try {
+            if (page < 0 || page >= getPageCount()) {
+                return null;
+            }
             BufferedImage awtImage = ImageIO.read(zipFile.getInputStream(zipList.get(page)));
             Image image = SwingFXUtils.toFXImage(awtImage, null);
             return image;
