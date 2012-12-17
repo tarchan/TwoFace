@@ -15,27 +15,20 @@
  */
 package com.mac.tarchan.twoface;
 
-import com.sun.pdfview.PDFFile;
-import com.sun.pdfview.PDFPage;
-import java.awt.geom.Rectangle2D;
-import java.awt.image.BufferedImage;
+import com.mac.tarchan.twoface.book.Book;
+import com.mac.tarchan.twoface.book.BookFactory;
 import java.io.File;
 import java.io.IOException;
-import java.io.RandomAccessFile;
 import java.net.URL;
-import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.application.Application.Parameters;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -47,7 +40,6 @@ import javafx.scene.control.MultipleSelectionModel;
 import javafx.scene.control.Pagination;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.image.WritableImage;
 import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
 import javafx.util.Callback;
@@ -61,8 +53,7 @@ public class TwoFaceController implements Initializable {
 
     private static final Logger log = Logger.getLogger(TwoFaceController.class.getName());
     private FileChooser fileChooser;
-    private PDFFile pdfFile;
-//    private WritableImage page0, page1;
+    private Book book;
     private int origin = 1;
     @FXML
     private ListView<PageItem> thumbnail;
@@ -110,14 +101,14 @@ public class TwoFaceController implements Initializable {
 
         HBox hbox = new HBox();
 
-        if (pdfFile == null) {
+        if (book == null) {
             Label label = new Label("ファイルを選択してください。");
             hbox.getChildren().add(label);
             return hbox;
         }
 
-        Image page0 = getImage(idx - origin);
-        Image page1 = getImage(idx - origin + 1);
+        Image page0 = book.getImage(idx - origin);
+        Image page1 = book.getImage(idx - origin + 1);
 
         ImageView view0 = new ImageView(page0);
         view0.setFitWidth(pagination.getWidth() / 2);
@@ -134,28 +125,6 @@ public class TwoFaceController implements Initializable {
         hbox.getChildren().add(view1);
         hbox.getChildren().add(view0);
         return hbox;
-    }
-
-    /**
-     * 指定されたページ番号のイメージを返します。
-     *
-     * @param page ページ番号
-     * @return イメージ
-     * @see SwingFXUtils#toFXImage(java.awt.image.BufferedImage,
-     * javafx.scene.image.WritableImage)
-     */
-    private Image getImage(int page) {
-        page++;
-        if (page <= 0 || page > pdfFile.getNumPages()) {
-            return null;
-        }
-        PDFPage pdfPage = pdfFile.getPage(page);
-        Rectangle2D rect = pdfPage.getBBox();
-        int width = (int) rect.getWidth();
-        int height = (int) rect.getHeight();
-        java.awt.Image awtImage = pdfPage.getImage(width, height, rect, null, true, true);
-        Image image = SwingFXUtils.toFXImage((BufferedImage) awtImage, null);
-        return image;
     }
 
     /**
@@ -204,15 +173,12 @@ public class TwoFaceController implements Initializable {
             }
 
             log.log(Level.INFO, "ファイルを開きます。: {0}", file);
-            RandomAccessFile read = new RandomAccessFile(file, "r");
-            FileChannel channel = read.getChannel();
-            ByteBuffer buf = channel.map(FileChannel.MapMode.READ_ONLY, 0, channel.size());
-            pdfFile = new PDFFile(buf);
+            book = BookFactory.getBook(file);
 
-            pagination.setPageCount(pdfFile.getNumPages());
+            pagination.setPageCount(book.getPageCount());
 
             ArrayList<PageItem> pages = new ArrayList<>();
-            for (int i = 1; i < pdfFile.getNumPages(); i += 2) {
+            for (int i = 1; i < book.getPageCount(); i += 2) {
                 pages.add(new PageItem(i));
             }
             ObservableList<PageItem> names = FXCollections.observableArrayList(pages);
