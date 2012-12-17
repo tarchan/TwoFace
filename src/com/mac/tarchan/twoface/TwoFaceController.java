@@ -57,6 +57,7 @@ public class TwoFaceController implements Initializable {
     private FileChooser fileChooser;
     private Book book;
     private int origin = 0;
+    private Exception lastError;
     @FXML
     private ListView<PageItem> thumbnail;
     @FXML
@@ -83,8 +84,10 @@ public class TwoFaceController implements Initializable {
 
         fileChooser = new FileChooser();
         FileChooser.ExtensionFilter pdfFilter = new FileChooser.ExtensionFilter("PDF ファイル (*.pdf)", "*.pdf");
+        FileChooser.ExtensionFilter zipFilter = new FileChooser.ExtensionFilter("ZIP ファイル (*.zip)", "*.zip");
         FileChooser.ExtensionFilter allFilter = new FileChooser.ExtensionFilter("すべてのファイル (*.*)", "*.*");
         fileChooser.getExtensionFilters().add(pdfFilter);
+        fileChooser.getExtensionFilters().add(zipFilter);
         fileChooser.getExtensionFilters().add(allFilter);
 
         pagination.setPageFactory(new Callback<Integer, Node>() {
@@ -116,7 +119,7 @@ public class TwoFaceController implements Initializable {
         HBox hbox = new HBox();
 
         if (book == null) {
-            Label label = new Label("ファイルを選択してください。");
+            Label label = lastError != null ? new Label("ファイルを読み込めません。: " + lastError) : new Label("ファイルを選択してください。");
             hbox.getChildren().add(label);
             return hbox;
         }
@@ -181,6 +184,7 @@ public class TwoFaceController implements Initializable {
 
             Parent root = getRoot();
             String param = (String) root.getUserData();
+            log.log(Level.INFO, "パラメータ={0}", param);
 
             File file = param != null ? new File(param) : fileChooser.showOpenDialog(null);
             if (file == null) {
@@ -203,6 +207,7 @@ public class TwoFaceController implements Initializable {
             thumbnail.requestFocus();
         } catch (IOException ex) {
             log.log(Level.SEVERE, "ファイルを読み込めません。", ex);
+            lastError = ex;
         }
     }
 

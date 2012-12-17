@@ -31,6 +31,8 @@ public class BookFactory {
     public static Book getBook(File file) throws IOException {
         if (file.getName().toLowerCase().endsWith(".pdf")) {
             return new PdfBook(file);
+        } else if (file.getName().toLowerCase().endsWith(".zip")) {
+            return new ZipBook(file);
         } else {
             throw new UnsupportedOperationException("Not supported yet.");
         }

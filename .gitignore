@@ -18,3 +18,5 @@ nbproject/UPDATED.TXT
 *.ear
 *.pdf
 *.bak
+
+nbproject/jfx-impl_backup.xml
