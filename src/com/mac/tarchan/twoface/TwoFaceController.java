@@ -26,7 +26,6 @@ import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -39,7 +38,6 @@ import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -170,10 +168,17 @@ public class TwoFaceController implements Initializable {
      */
     private void onChanged(ObservableValue<? extends PageItem> property, PageItem oldValue, PageItem newValue) {
         log.log(Level.INFO, "onChanged: {0}, {1} -> {2}", new Object[]{property, oldValue, newValue});
-        int idx = newValue.value;
-        pagination.currentPageIndexProperty().setValue(idx);
+        if (newValue != null) {
+            int idx = newValue.value;
+            pagination.currentPageIndexProperty().setValue(idx);
+        }
     }
 
+    /**
+     * root 要素を取得します。
+     *
+     * @return root 要素
+     */
     private Parent getRoot() {
         Parent root = pagination.getParent();
         while (root.getParent() != null) {
@@ -192,14 +197,7 @@ public class TwoFaceController implements Initializable {
             log.log(Level.INFO, "ファイルを選択します。");
 
             Parent root = getRoot();
-            Parameters userData = (Parameters) root.getUserData();
-            String param = userData != null ? userData.getNamed().get("file") : null;
-//            if (userData != null) {
-//                Map<String, String> named = userData.getNamed();
-//                for (Map.Entry<String, String> entry : named.entrySet()) {
-//                    log.log(Level.INFO, "entry: {0}", entry);
-//                }
-//            }
+            String param = (String) root.getUserData();
 
             File file = param != null ? new File(param) : fileChooser.showOpenDialog(null);
             if (file == null) {

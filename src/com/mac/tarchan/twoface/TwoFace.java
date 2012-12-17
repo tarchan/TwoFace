@@ -31,7 +31,10 @@ public class TwoFace extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("TwoFace.fxml"));
-        root.setUserData(getParameters());
+        if (getParameters().getNamed().containsKey("file"))
+        {
+            root.setUserData(getParameters().getNamed().get("file"));
+        }
 
         Scene scene = new Scene(root);
 
