@@ -107,11 +107,11 @@ public class TwoFaceController implements Initializable {
     /**
      * Pagination で表示する Node を返します。
      *
-     * @param page ページ番号 (0 オリジン)
+     * @param index ページ番号 (0 オリジン)
      * @return Pagination で表示する Node
      */
-    private Node createPage(Integer page) {
-        log.log(Level.INFO, "createPage: {0} ページ", page);
+    private Node createPage(Integer index) {
+        log.log(Level.INFO, "createPage: index={0} ({1})", new Object[]{index, origin});
 
         HBox hbox = new HBox();
 
@@ -121,10 +121,8 @@ public class TwoFaceController implements Initializable {
             return hbox;
         }
 
-        Image page0 = book.getImage(page + origin);
-        Image page1 = book.getImage(page + origin + 1);
-        log.log(Level.INFO, "page0: {0}", page0);
-        log.log(Level.INFO, "page1: {0}", page1);
+        Image page0 = book.getImage(index + origin);
+        Image page1 = book.getImage(index + origin + 1);
 
         ImageView view0 = new ImageView(page0);
         view0.setFitWidth(pagination.getWidth() / 2);
@@ -204,7 +202,7 @@ public class TwoFaceController implements Initializable {
             thumbnail.getSelectionModel().select(0);
             thumbnail.requestFocus();
         } catch (IOException ex) {
-            log.log(Level.SEVERE, "PDF ファイルを読み込めません。", ex);
+            log.log(Level.SEVERE, "ファイルを読み込めません。", ex);
         }
     }
 
@@ -216,28 +214,25 @@ public class TwoFaceController implements Initializable {
 
     @FXML
     private void handleFirst(ActionEvent event) {
-        log.log(Level.INFO, "最初のページ: {0}", 0);
-        pagination.currentPageIndexProperty().setValue(0);
+        thumbnail.getSelectionModel().select(0);
     }
 
     @FXML
     private void handlePrev(ActionEvent event) {
-        int idx = pagination.currentPageIndexProperty().getValue() - 2;
-        log.log(Level.INFO, "前のページ: {0}", idx);
-        pagination.currentPageIndexProperty().setValue(idx);
+        int index = thumbnail.getSelectionModel().getSelectedIndex() - 1;
+        thumbnail.getSelectionModel().select(index);
     }
 
     @FXML
     private void handleNext(ActionEvent event) {
-        int idx = pagination.currentPageIndexProperty().getValue() + 2;
-        log.log(Level.INFO, "次のページ: {0}", idx);
-        pagination.currentPageIndexProperty().setValue(idx);
+        int index = thumbnail.getSelectionModel().getSelectedIndex() + 1;
+        thumbnail.getSelectionModel().select(index);
     }
 
     @FXML
     private void handleLast(ActionEvent event) {
-        log.log(Level.INFO, "最後のページ: {0}", pagination.getPageCount());
-        pagination.currentPageIndexProperty().setValue(pagination.getPageCount());
+        int index = thumbnail.getItems().size() - 1;
+        thumbnail.getSelectionModel().select(index);
     }
 }
 
