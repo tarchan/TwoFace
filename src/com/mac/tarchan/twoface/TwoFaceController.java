@@ -26,9 +26,11 @@ import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Application.Parameters;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -37,8 +39,10 @@ import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MultipleSelectionModel;
@@ -136,11 +140,12 @@ public class TwoFaceController implements Initializable {
 
     /**
      * 指定されたページ番号のイメージを返します。
-     * 
+     *
      * @param idx ページ番号
      * @param image イメージ
      * @return イメージ
-     * @see SwingFXUtils#toFXImage(java.awt.image.BufferedImage, javafx.scene.image.WritableImage) 
+     * @see SwingFXUtils#toFXImage(java.awt.image.BufferedImage,
+     * javafx.scene.image.WritableImage)
      */
     private WritableImage getImage(int idx, WritableImage image) {
         idx++;
@@ -158,7 +163,7 @@ public class TwoFaceController implements Initializable {
 
     /**
      * サムネールで選択されたページを表示します。
-     * 
+     *
      * @param property プロパティ
      * @param oldValue 古い値
      * @param newValue 新しい値
@@ -169,11 +174,38 @@ public class TwoFaceController implements Initializable {
         pagination.currentPageIndexProperty().setValue(idx);
     }
 
+    private Parent getRoot() {
+        Parent root = pagination.getParent();
+        while (root.getParent() != null) {
+            log.log(Level.INFO, "parent={0}", root.getClass());
+            log.log(Level.INFO, "userData={0}", root.getUserData());
+            root = root.getParent();
+        }
+        log.log(Level.INFO, "root={0}", root.getClass());
+        log.log(Level.INFO, "userData={0}", root.getUserData());
+        return root;
+    }
+
     @FXML
     private void handleOpen(ActionEvent event) {
         try {
             log.log(Level.INFO, "ファイルを選択します。");
-            File file = fileChooser.showOpenDialog(null);
+
+            Parent root = getRoot();
+            Parameters userData = (Parameters) root.getUserData();
+            String param = userData != null ? userData.getNamed().get("file") : null;
+//            if (userData != null) {
+//                Map<String, String> named = userData.getNamed();
+//                for (Map.Entry<String, String> entry : named.entrySet()) {
+//                    log.log(Level.INFO, "entry: {0}", entry);
+//                }
+//            }
+
+            File file = param != null ? new File(param) : fileChooser.showOpenDialog(null);
+            if (file == null) {
+                return;
+            }
+
             log.log(Level.INFO, "ファイルを開きます。: {0}", file);
             RandomAccessFile read = new RandomAccessFile(file, "r");
             FileChannel channel = read.getChannel();
