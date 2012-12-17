@@ -38,6 +38,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MultipleSelectionModel;
 import javafx.scene.control.Pagination;
+import javafx.scene.control.RadioMenuItem;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -59,6 +61,18 @@ public class TwoFaceController implements Initializable {
     private ListView<PageItem> thumbnail;
     @FXML
     private Pagination pagination;
+    @FXML
+    private ToggleGroup faceGroup;
+    @FXML
+    private ToggleGroup originGroup;
+    @FXML
+    private ToggleGroup directionGroup;
+    @FXML
+    private RadioMenuItem twoFace;
+    @FXML
+    private RadioMenuItem withCover;
+    @FXML
+    private RadioMenuItem rightDirection;
 
     /**
      * Initializes the controller class.
@@ -93,11 +107,11 @@ public class TwoFaceController implements Initializable {
     /**
      * Pagination で表示する Node を返します。
      *
-     * @param idx ページ番号 (0 オリジン)
+     * @param page ページ番号 (0 オリジン)
      * @return Pagination で表示する Node
      */
-    private Node createPage(Integer idx) {
-        log.log(Level.INFO, "createPage: {0} ページ", idx);
+    private Node createPage(Integer page) {
+        log.log(Level.INFO, "createPage: {0} ページ", page);
 
         HBox hbox = new HBox();
 
@@ -107,8 +121,10 @@ public class TwoFaceController implements Initializable {
             return hbox;
         }
 
-        Image page0 = book.getImage(idx - origin);
-        Image page1 = book.getImage(idx - origin + 1);
+        Image page0 = book.getImage(page + origin);
+        Image page1 = book.getImage(page + origin + 1);
+        log.log(Level.INFO, "page0: {0}", page0);
+        log.log(Level.INFO, "page1: {0}", page1);
 
         ImageView view0 = new ImageView(page0);
         view0.setFitWidth(pagination.getWidth() / 2);
@@ -137,8 +153,9 @@ public class TwoFaceController implements Initializable {
     private void onChanged(ObservableValue<? extends PageItem> property, PageItem oldValue, PageItem newValue) {
         log.log(Level.INFO, "onChanged: {0}, {1} -> {2}", new Object[]{property, oldValue, newValue});
         if (newValue != null) {
-            int idx = newValue.value;
-            pagination.currentPageIndexProperty().setValue(idx);
+            int page = newValue.value;
+            log.log(Level.INFO, "page={0}", page);
+            pagination.currentPageIndexProperty().setValue(page);
         }
     }
 
@@ -178,12 +195,10 @@ public class TwoFaceController implements Initializable {
             pagination.setPageCount(book.getPageCount());
 
             ArrayList<PageItem> pages = new ArrayList<>();
-             for (int i = 0; i < book.getPageCount(); i += 1) {
-                pages.add(new PageItem(i));
+            origin = withCover.isSelected() ? 0 : 1;
+            for (int i = 0; i < book.getPageCount(); i += 2) {
+                pages.add(new PageItem(i, origin));
             }
-//            for (int i = 1; i < book.getPageCount(); i += 2) {
-//                pages.add(new PageItem(i));
-//            }
             ObservableList<PageItem> names = FXCollections.observableArrayList(pages);
             thumbnail.setItems(names);
             thumbnail.getSelectionModel().select(0);
@@ -245,9 +260,9 @@ class PageItem {
      */
     public Image image;
 
-    public PageItem(int page) {
+    public PageItem(int page, int origin) {
         value = page;
-        name = page != 0 ? String.format("%,d ページ", page) : "表紙";
+        name = page + origin != 0 ? String.format("%,d ページ", page + origin) : "表紙";
     }
 
     /**

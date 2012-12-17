@@ -73,21 +73,21 @@
                     <ToggleGroup fx:id="faceGroup" />
                   </toggleGroup>
                 </RadioMenuItem>
-                <RadioMenuItem mnemonicParsing="false" selected="true" text="見開きページ" toggleGroup="$faceGroup" />
+                <RadioMenuItem mnemonicParsing="false" selected="true" text="見開きページ" toggleGroup="$faceGroup" fx:id="twoFace" />
                 <SeparatorMenuItem mnemonicParsing="false" />
                 <RadioMenuItem mnemonicParsing="false" selected="false" text="表紙なし">
                   <toggleGroup>
                     <ToggleGroup fx:id="originGroup" />
                   </toggleGroup>
                 </RadioMenuItem>
-                <RadioMenuItem mnemonicParsing="false" selected="true" text="表紙あり" toggleGroup="$originGroup" />
+                <RadioMenuItem mnemonicParsing="false" selected="true" text="表紙あり" toggleGroup="$originGroup" fx:id="withCover" />
                 <SeparatorMenuItem mnemonicParsing="false" />
                 <RadioMenuItem mnemonicParsing="false" text="左綴じ">
                   <toggleGroup>
                     <ToggleGroup fx:id="directionGroup" />
                   </toggleGroup>
                 </RadioMenuItem>
-                <RadioMenuItem mnemonicParsing="false" selected="true" text="右綴じ" toggleGroup="$directionGroup" />
+                <RadioMenuItem mnemonicParsing="false" selected="true" text="右綴じ" toggleGroup="$directionGroup" fx:id="rightDirection" />
               </items>
             </Menu>
             <Menu disable="false" mnemonicParsing="false" text="ヘルプ">
