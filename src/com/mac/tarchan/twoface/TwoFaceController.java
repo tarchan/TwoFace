@@ -25,7 +25,6 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
-import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -37,7 +36,6 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.control.MultipleSelectionModel;
 import javafx.scene.control.Pagination;
 import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.Toggle;
@@ -46,7 +44,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.DataFormat;
 import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
 import javafx.util.Callback;
@@ -100,8 +97,8 @@ public class TwoFaceController implements Initializable {
 
         pagination.setPageFactory(new Callback<Integer, Node>() {
             @Override
-            public Node call(Integer idx) {
-                return createPage(idx);
+            public Node call(Integer index) {
+                return createPage(index);
             }
         });
         pagination.setPageCount(1);
@@ -113,18 +110,24 @@ public class TwoFaceController implements Initializable {
             }
         });
 
+        twoFace.selectedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> self, Boolean oldValue, Boolean newValue) {
+                log.log(Level.INFO, "twoFace.selectedProperty: {0}", self);
+            }
+        });
+
         withCover.selectedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> self, Boolean oldValue, Boolean newValue) {
-                log.log(Level.INFO, "withCover.selectedProperty: {0}", self);
                 setCover(newValue);
             }
         });
 
-        faceGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
+        rightDirection.selectedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
-            public void changed(ObservableValue<? extends Toggle> self, Toggle oldValue, Toggle newValue) {
-                log.log(Level.INFO, "faceGroup.selectedToggleProperty: {0}={1}->{2}", new Object[]{self, oldValue, newValue});
+            public void changed(ObservableValue<? extends Boolean> self, Boolean oldValue, Boolean newValue) {
+                log.log(Level.INFO, "rightDirection.selectedProperty: {0}", self);
             }
         });
     }
@@ -145,10 +148,11 @@ public class TwoFaceController implements Initializable {
 
     /**
      * 表紙あり／表紙なしを設定します。
-     * 
+     *
      * @param withCover 表紙ありの場合は true
      */
     private void setCover(boolean withCover) {
+        log.log(Level.INFO, "setCover: {0}", withCover);
         int index = thumbnail.getSelectionModel().getSelectedIndex();
         int pageCount = book.getPageCount() / 2 * 2 + 1;
 
