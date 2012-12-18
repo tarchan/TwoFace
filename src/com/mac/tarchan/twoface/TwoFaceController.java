@@ -76,7 +76,10 @@ public class TwoFaceController implements Initializable {
     private RadioMenuItem rightDirection;
 
     /**
-     * Initializes the controller class.
+     * コントローラを初期化します。
+     * 
+     * @param url root 要素の URL
+     * @param rb ローカライズリソース
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -241,38 +244,49 @@ public class TwoFaceController implements Initializable {
         int index = thumbnail.getItems().size() - 1;
         thumbnail.getSelectionModel().select(index);
     }
-}
-
-/**
- * ページアイテム
- *
- * @author tarchan
- */
-class PageItem {
 
     /**
-     * ページ番号
+     * ページアイテム
+     *
+     * @author tarchan
      */
-    public int value;
-    /**
-     * ページ名
-     */
-    public String name;
-    /**
-     * サムネール
-     */
-    public Image image;
+    public static class PageItem {
 
-    public PageItem(int page, int origin) {
-        value = page;
-        name = page + origin != 0 ? String.format("%,d ページ", page + origin) : "表紙";
-    }
+        /**
+         * ページ番号
+         */
+        public int value;
+        /**
+         * ページ名
+         */
+        public String name;
+        /**
+         * サムネール
+         */
+        public Image image;
 
-    /**
-     * 文字列表現
-     */
-    @Override
-    public String toString() {
-        return name;
+        /**
+         * ページアイテムを構築します。
+         * 
+         * @param page ページ番号
+         * @param origin ページ基点
+         */
+        /**
+         *
+         * @param page
+         * @param origin
+         */
+        public PageItem(int page, int origin) {
+            value = page;
+            name = page + origin != 0 ? String.format("%,d ページ", page + origin) : "表紙";
+        }
+
+        /**
+         * 文字列表現
+         */
+        @Override
+        public String toString() {
+            return name;
+        }
     }
 }

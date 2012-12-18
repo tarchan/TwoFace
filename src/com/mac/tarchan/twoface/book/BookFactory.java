@@ -25,9 +25,20 @@ import java.io.IOException;
  */
 public class BookFactory {
 
-    protected BookFactory() {
+    /**
+     * インスタンスの生成を禁止します。
+     */
+    private BookFactory() {
     }
 
+    /**
+     * 指定されたファイルに対応する Book オブジェクトを返します。
+     * 
+     * @param file ファイル
+     * @return Book オブジェクト
+     * @throws IOException ファイルの読み込みでエラーが発生した場合
+     * @throws UnsupportedOperationException 未対応のファイルが指定された場合
+     */
     public static Book getBook(File file) throws IOException {
         if (file.getName().toLowerCase().endsWith(".pdf")) {
             return new PdfBook(file);
