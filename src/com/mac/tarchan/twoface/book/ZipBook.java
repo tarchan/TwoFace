@@ -38,6 +38,12 @@ public class ZipBook implements Book {
     private ZipFile zipFile;
     private List<ZipEntry> zipList;
 
+    /**
+     * ZipBook オブジェクトを構築します。
+     * 
+     * @param file ファイル
+     * @throws IOException ファイルが読み込めない場合
+     */
     public ZipBook(File file) throws IOException {
         zipFile = new ZipFile(file);
         Enumeration<? extends ZipEntry> entries = zipFile.entries();

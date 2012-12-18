@@ -28,6 +28,12 @@ import javafx.stage.Stage;
  */
 public class TwoFace extends Application {
 
+    /**
+     * TwoFace アプリケーションを開始します。
+     * 
+     * @param stage Stage オブジェクト
+     * @throws Exception FXML ファイルが読み込めない場合
+     */
     @Override
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("TwoFace.fxml"));

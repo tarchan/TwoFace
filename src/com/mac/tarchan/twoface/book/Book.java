@@ -25,16 +25,17 @@ public interface Book {
 
     /**
      * この Book のページ数を返します。
-     * 
+     *
      * @return ページ数
      */
     public int getPageCount();
 
     /**
      * 指定されたページ番号のイメージを返します。
-     * 
+     * ページ番号は 0 オリジンです。
+     *
      * @param page ページ番号
-     * @return イメージ
+     * @return イメージ または null
      */
     public Image getImage(int page);
 }
