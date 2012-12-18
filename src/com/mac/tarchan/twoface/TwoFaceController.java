@@ -25,6 +25,7 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
+import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -39,6 +40,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.MultipleSelectionModel;
 import javafx.scene.control.Pagination;
 import javafx.scene.control.RadioMenuItem;
+import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -104,13 +106,61 @@ public class TwoFaceController implements Initializable {
         });
         pagination.setPageCount(1);
 
-        MultipleSelectionModel<PageItem> model = thumbnail.getSelectionModel();
-        model.selectedItemProperty().addListener(new ChangeListener<PageItem>() {
+        thumbnail.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<PageItem>() {
             @Override
-            public void changed(ObservableValue<? extends PageItem> property, PageItem oldValue, PageItem newValue) {
-                onChanged(property, oldValue, newValue);
+            public void changed(ObservableValue<? extends PageItem> self, PageItem oldValue, PageItem newValue) {
+                selectPage(newValue);
             }
         });
+
+        withCover.selectedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> self, Boolean oldValue, Boolean newValue) {
+                log.log(Level.INFO, "withCover.selectedProperty: {0}", self);
+                setCover(newValue);
+            }
+        });
+
+        faceGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
+            @Override
+            public void changed(ObservableValue<? extends Toggle> self, Toggle oldValue, Toggle newValue) {
+                log.log(Level.INFO, "faceGroup.selectedToggleProperty: {0}={1}->{2}", new Object[]{self, oldValue, newValue});
+            }
+        });
+    }
+
+    /**
+     * サムネールで選択されたページを表示します。
+     *
+     * @param page ページ
+     */
+    private void selectPage(PageItem page) {
+        log.log(Level.INFO, "selectPage: {0}", page);
+        if (page != null) {
+            int index = page.value;
+            log.log(Level.INFO, "index={0}", index);
+            pagination.currentPageIndexProperty().setValue(index);
+        }
+    }
+
+    /**
+     * 表紙あり／表紙なしを設定します。
+     * 
+     * @param withCover 表紙ありの場合は true
+     */
+    private void setCover(boolean withCover) {
+        int index = thumbnail.getSelectionModel().getSelectedIndex();
+        int pageCount = book.getPageCount() / 2 * 2 + 1;
+
+        ArrayList<PageItem> pages = new ArrayList<>();
+        origin = withCover ? 0 : 1;
+        for (int i = 0; i < pageCount; i += 2) {
+            pages.add(new PageItem(i, origin));
+        }
+        ObservableList<PageItem> names = FXCollections.observableArrayList(pages);
+        thumbnail.setItems(names);
+        thumbnail.getSelectionModel().select(index);
+        thumbnail.requestFocus();
     }
 
     /**
@@ -151,22 +201,6 @@ public class TwoFaceController implements Initializable {
     }
 
     /**
-     * サムネールで選択されたページを表示します。
-     *
-     * @param property プロパティ
-     * @param oldValue 古い値
-     * @param newValue 新しい値
-     */
-    private void onChanged(ObservableValue<? extends PageItem> property, PageItem oldValue, PageItem newValue) {
-        log.log(Level.INFO, "onChanged: {0}, {1} -> {2}", new Object[]{property, oldValue, newValue});
-        if (newValue != null) {
-            int page = newValue.value;
-            log.log(Level.INFO, "page={0}", page);
-            pagination.currentPageIndexProperty().setValue(page);
-        }
-    }
-
-    /**
      * root 要素を取得します。
      *
      * @return root 要素
@@ -204,13 +238,7 @@ public class TwoFaceController implements Initializable {
             log.log(Level.INFO, "ページ数: {0} ({1})", new Object[]{book.getPageCount(), pageCount});
             pagination.setPageCount(pageCount);
 
-            ArrayList<PageItem> pages = new ArrayList<>();
-            origin = withCover.isSelected() ? 0 : 1;
-            for (int i = 0; i < pageCount; i += 2) {
-                pages.add(new PageItem(i, origin));
-            }
-            ObservableList<PageItem> names = FXCollections.observableArrayList(pages);
-            thumbnail.setItems(names);
+            setCover(withCover.isSelected());
             thumbnail.getSelectionModel().select(0);
             thumbnail.requestFocus();
         } catch (IOException ex) {
