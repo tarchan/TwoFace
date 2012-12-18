@@ -42,6 +42,9 @@ import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.DataFormat;
 import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
 import javafx.util.Callback;
@@ -77,7 +80,7 @@ public class TwoFaceController implements Initializable {
 
     /**
      * コントローラを初期化します。
-     * 
+     *
      * @param url root 要素の URL
      * @param rb ローカライズリソース
      */
@@ -223,6 +226,28 @@ public class TwoFaceController implements Initializable {
     }
 
     @FXML
+    private void handleCopy(ActionEvent event) {
+        log.log(Level.INFO, "コピー");
+        PageItem page = thumbnail.getSelectionModel().getSelectedItem();
+        if (page == null) {
+            return;
+        }
+
+        String text = page.name;
+        Image image = book.getImage(page.value + origin);
+
+        Clipboard clipboard = Clipboard.getSystemClipboard();
+        ClipboardContent content = new ClipboardContent();
+        if (text != null) {
+            content.putString(text);
+        }
+        if (image != null) {
+            content.putImage(image);
+        }
+        clipboard.setContent(content);
+    }
+
+    @FXML
     private void handleFirst(ActionEvent event) {
         thumbnail.getSelectionModel().select(0);
     }
@@ -267,7 +292,7 @@ public class TwoFaceController implements Initializable {
 
         /**
          * ページアイテムを構築します。
-         * 
+         *
          * @param page ページ番号
          * @param origin ページ基点
          */

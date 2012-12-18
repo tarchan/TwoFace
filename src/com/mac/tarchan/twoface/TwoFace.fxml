@@ -32,7 +32,7 @@
             </Menu>
             <Menu disable="false" mnemonicParsing="false" text="編集">
               <items>
-                <MenuItem disable="true" mnemonicParsing="false" text="コピー">
+                <MenuItem disable="false" mnemonicParsing="false" onAction="#handleCopy" text="コピー">
                   <accelerator>
                     <KeyCodeCombination alt="UP" code="C" control="UP" meta="DOWN" shift="UP" shortcut="UP" />
                   </accelerator>
