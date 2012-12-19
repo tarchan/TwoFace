@@ -46,6 +46,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.SwipeEvent;
 import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
 import javafx.util.Callback;
@@ -179,6 +180,7 @@ public class TwoFaceController implements Initializable {
         thumbnail.setItems(names);
         thumbnail.getSelectionModel().select(index);
         thumbnail.requestFocus();
+        pagination.layout();
     }
 
     /**
@@ -273,6 +275,7 @@ public class TwoFaceController implements Initializable {
             int pageCount = book.getPageCount() / 2 * 2 + 1;
             log.log(Level.INFO, "ページ数: {0} ({1})", new Object[]{book.getPageCount(), pageCount});
             pagination.setPageCount(pageCount);
+            pagination.layout();
         } catch (IOException ex) {
             log.log(Level.SEVERE, "ファイルを読み込めません。", ex);
             lastError = ex;
@@ -328,6 +331,26 @@ public class TwoFaceController implements Initializable {
     private void handleLast(ActionEvent event) {
         int index = thumbnail.getItems().size() - 1;
         thumbnail.getSelectionModel().select(index);
+    }
+
+    @FXML
+    private void handleSwipeLeft(SwipeEvent event) {
+        log.log(Level.INFO, "handleSwipeLeft: {0}", event);
+    }
+
+    @FXML
+    private void handleSwipeRight(SwipeEvent event) {
+        log.log(Level.INFO, "handleSwipeRight: {0}", event);
+    }
+
+    @FXML
+    private void handleSwipeUp(SwipeEvent event) {
+        log.log(Level.INFO, "handleSwipeUp: {0}", event);
+    }
+
+    @FXML
+    private void handleSwipeDown(SwipeEvent event) {
+        log.log(Level.INFO, "handleSwipeDown: {0}", event);
     }
 
     /**
