@@ -18,7 +18,8 @@ package com.mac.tarchan.twoface.book;
 import javafx.scene.image.Image;
 
 /**
- *
+ * Book インターフェースです。
+ * 
  * @author Takashi Ogura <tarchan at mac.com>
  */
 public interface Book {

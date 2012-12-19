@@ -18,6 +18,7 @@ package com.mac.tarchan.twoface.book;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -30,8 +31,9 @@ import javafx.scene.image.Image;
 import javax.imageio.ImageIO;
 
 /**
- *
- * @author tarchan
+ * Zip のイメージを返すクラスです。
+ * 
+ * @author @author Takashi Ogura <tarchan at mac.com>
  */
 public class ZipBook implements Book {
 
@@ -61,11 +63,12 @@ public class ZipBook implements Book {
 
     @Override
     public Image getImage(int page) {
-        try {
-            if (page < 0 || page >= getPageCount()) {
-                return null;
-            }
-            BufferedImage awtImage = ImageIO.read(zipFile.getInputStream(zipList.get(page)));
+        if (page < 0 || page >= getPageCount()) {
+            return null;
+        }
+
+        try (InputStream fin = zipFile.getInputStream(zipList.get(page))) {
+            BufferedImage awtImage = ImageIO.read(fin);
             Image image = SwingFXUtils.toFXImage(awtImage, null);
             return image;
         } catch (IOException ex) {

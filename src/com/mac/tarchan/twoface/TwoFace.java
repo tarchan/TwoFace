@@ -30,15 +30,16 @@ public class TwoFace extends Application {
 
     /**
      * TwoFace アプリケーションを開始します。
-     * 
+     *
      * @param stage Stage オブジェクト
      * @throws Exception FXML ファイルが読み込めない場合
      */
     @Override
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("TwoFace.fxml"));
-        if (getParameters().getNamed().containsKey("file"))
-        {
+
+        // コマンドライン引数をユーザーデータに設定します。
+        if (getParameters().getNamed().containsKey("file")) {
             root.setUserData(getParameters().getNamed().get("file"));
         }
 
