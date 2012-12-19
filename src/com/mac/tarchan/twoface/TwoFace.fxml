@@ -17,7 +17,7 @@
           <menus>
             <Menu mnemonicParsing="false" text="ファイル">
               <items>
-                <MenuItem id="" mnemonicParsing="false" onAction="#handleOpen" text="開く...">
+                <MenuItem id="" mnemonicParsing="false" onAction="#handleOpen" text="開く..." fx:id="openFileMenu">
                   <accelerator>
                     <KeyCodeCombination alt="UP" code="O" control="UP" meta="DOWN" shift="UP" shortcut="UP" />
                   </accelerator>
@@ -73,21 +73,21 @@
                     <ToggleGroup fx:id="faceGroup" />
                   </toggleGroup>
                 </RadioMenuItem>
-                <RadioMenuItem mnemonicParsing="false" selected="true" text="見開きページ" toggleGroup="$faceGroup" fx:id="twoFace" />
+                <RadioMenuItem id="twoFaceMenu" mnemonicParsing="false" selected="true" text="見開きページ" toggleGroup="$faceGroup" fx:id="twoFaceMenu" />
                 <SeparatorMenuItem mnemonicParsing="false" />
                 <RadioMenuItem mnemonicParsing="false" selected="false" text="表紙なし">
                   <toggleGroup>
                     <ToggleGroup fx:id="originGroup" />
                   </toggleGroup>
                 </RadioMenuItem>
-                <RadioMenuItem mnemonicParsing="false" selected="true" text="表紙あり" toggleGroup="$originGroup" fx:id="withCover" />
+                <RadioMenuItem id="withCoverMenu" mnemonicParsing="false" selected="true" text="表紙あり" toggleGroup="$originGroup" fx:id="withCoverMenu" />
                 <SeparatorMenuItem mnemonicParsing="false" />
                 <RadioMenuItem mnemonicParsing="false" text="左綴じ">
                   <toggleGroup>
                     <ToggleGroup fx:id="directionGroup" />
                   </toggleGroup>
                 </RadioMenuItem>
-                <RadioMenuItem mnemonicParsing="false" selected="true" text="右綴じ" toggleGroup="$directionGroup" fx:id="rightDirection" />
+                <RadioMenuItem id="rightDirectionMenu" mnemonicParsing="false" selected="true" text="右綴じ" toggleGroup="$directionGroup" fx:id="rightDirectionMenu" />
               </items>
             </Menu>
             <Menu disable="false" mnemonicParsing="false" text="ヘルプ">

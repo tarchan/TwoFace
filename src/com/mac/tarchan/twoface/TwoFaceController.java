@@ -38,6 +38,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.Pagination;
 import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.ToggleGroup;
@@ -111,17 +112,11 @@ public class TwoFaceController implements Initializable {
     @FXML
     private Pagination pagination;
     @FXML
-    private ToggleGroup faceGroup;
+    private RadioMenuItem twoFaceMenu;
     @FXML
-    private ToggleGroup originGroup;
+    private RadioMenuItem withCoverMenu;
     @FXML
-    private ToggleGroup directionGroup;
-    @FXML
-    private RadioMenuItem twoFace;
-    @FXML
-    private RadioMenuItem withCover;
-    @FXML
-    private RadioMenuItem rightDirection;
+    private RadioMenuItem rightDirectionMenu;
 
     /**
      * コントローラを初期化します。
@@ -156,9 +151,34 @@ public class TwoFaceController implements Initializable {
             }
         });
 
-        twoFace.selectedProperty().bindBidirectional(faceProprty);
-        withCover.selectedProperty().bindBidirectional(coverProprty);
-        rightDirection.selectedProperty().bindBidirectional(rightProprty);
+        twoFaceMenu.selectedProperty().bindBidirectional(faceProprty);
+        withCoverMenu.selectedProperty().bindBidirectional(coverProprty);
+        rightDirectionMenu.selectedProperty().bindBidirectional(rightProprty);
+    }
+
+    /**
+     * 表紙あり／表紙なしを設定します。
+     *
+     * @param withCover 表紙ありの場合は true
+     */
+    private void setCover(boolean withCover) {
+        log.log(Level.INFO, "setCover: {0}", withCover);
+        if (book == null) {
+            return;
+        }
+
+        int index = thumbnail.getSelectionModel().getSelectedIndex();
+        int pageCount = book.getPageCount() / 2 * 2 + 1;
+
+        ArrayList<PageItem> pages = new ArrayList<>();
+        origin = withCover ? 0 : 1;
+        for (int i = 0; i < pageCount; i += 2) {
+            pages.add(new PageItem(i, origin));
+        }
+        ObservableList<PageItem> names = FXCollections.observableArrayList(pages);
+        thumbnail.setItems(names);
+        thumbnail.getSelectionModel().select(index);
+        thumbnail.requestFocus();
     }
 
     /**
@@ -173,27 +193,6 @@ public class TwoFaceController implements Initializable {
             log.log(Level.INFO, "index={0}", index);
             pagination.currentPageIndexProperty().setValue(index);
         }
-    }
-
-    /**
-     * 表紙あり／表紙なしを設定します。
-     *
-     * @param withCover 表紙ありの場合は true
-     */
-    private void setCover(boolean withCover) {
-        log.log(Level.INFO, "setCover: {0}", withCover);
-        int index = thumbnail.getSelectionModel().getSelectedIndex();
-        int pageCount = book.getPageCount() / 2 * 2 + 1;
-
-        ArrayList<PageItem> pages = new ArrayList<>();
-        origin = withCover ? 0 : 1;
-        for (int i = 0; i < pageCount; i += 2) {
-            pages.add(new PageItem(i, origin));
-        }
-        ObservableList<PageItem> names = FXCollections.observableArrayList(pages);
-        thumbnail.setItems(names);
-        thumbnail.getSelectionModel().select(index);
-        thumbnail.requestFocus();
     }
 
     /**
@@ -267,13 +266,13 @@ public class TwoFaceController implements Initializable {
             log.log(Level.INFO, "ファイルを開きます。: {0}", file);
             book = BookFactory.getBook(file);
 
+            setCover(coverProprty.get());
+            thumbnail.getSelectionModel().select(0);
+            thumbnail.requestFocus();
+
             int pageCount = book.getPageCount() / 2 * 2 + 1;
             log.log(Level.INFO, "ページ数: {0} ({1})", new Object[]{book.getPageCount(), pageCount});
             pagination.setPageCount(pageCount);
-
-            setCover(withCover.isSelected());
-            thumbnail.getSelectionModel().select(0);
-            thumbnail.requestFocus();
         } catch (IOException ex) {
             log.log(Level.SEVERE, "ファイルを読み込めません。", ex);
             lastError = ex;
