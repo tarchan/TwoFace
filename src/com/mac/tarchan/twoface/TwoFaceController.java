@@ -33,6 +33,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -45,6 +46,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.InputEvent;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.input.SwipeEvent;
 import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
@@ -333,6 +336,9 @@ public class TwoFaceController implements Initializable {
     @FXML
     private void handlePrev(ActionEvent event) {
         int index = thumbnail.getSelectionModel().getSelectedIndex() - 1;
+        if (index < 0) {
+            return;
+        }
         thumbnail.getSelectionModel().select(index);
     }
 
@@ -366,6 +372,23 @@ public class TwoFaceController implements Initializable {
     @FXML
     private void handleSwipeDown(SwipeEvent event) {
         log.log(Level.INFO, "handleSwipeDown: {0}", event);
+    }
+
+    @FXML
+    private void handleScrollStarted(ScrollEvent event) {
+        log.log(Level.INFO, "handleScrollStarted: {0} [{1}, {2}]", new Object[]{event.getEventType().getName(), event.getDeltaX(), event.getDeltaY()});
+        if (event.getDeltaY() == 0) {
+            if (event.getDeltaX() < 0) {
+                handlePrev(null);
+            } else {
+                handleNext(null);
+            }
+        }
+        if (event.getDeltaX() == 0) {
+            if (event.getDeltaY() < 0) {
+                handleOpen(null);
+            }
+        }
     }
 
     /**
