@@ -25,6 +25,8 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -38,7 +40,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Pagination;
 import javafx.scene.control.RadioMenuItem;
-import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -60,6 +61,51 @@ public class TwoFaceController implements Initializable {
     private Book book;
     private int origin = 0;
     private Exception lastError;
+    private boolean face = true;
+    private BooleanProperty faceProprty = new SimpleBooleanProperty(face) {
+        @Override
+        public boolean get() {
+            log.log(Level.INFO, "faceProprty.get:");
+            return face;
+        }
+
+        @Override
+        public void set(boolean value) {
+            log.log(Level.INFO, "faceProprty.set: {0}", value);
+            face = value;
+            // TODO set face
+        }
+    };
+    private boolean cover = true;
+    private BooleanProperty coverProprty = new SimpleBooleanProperty(cover) {
+        @Override
+        public boolean get() {
+            log.log(Level.INFO, "coverProprty.get:");
+            return cover;
+        }
+
+        @Override
+        public void set(boolean value) {
+            log.log(Level.INFO, "coverProprty.set: {0}", value);
+            cover = value;
+            setCover(value);
+        }
+    };
+    private boolean right = true;
+    private BooleanProperty rightProprty = new SimpleBooleanProperty(right) {
+        @Override
+        public boolean get() {
+            log.log(Level.INFO, "rightProprty.get:");
+            return right;
+        }
+
+        @Override
+        public void set(boolean value) {
+            log.log(Level.INFO, "rightProprty.set: {0}", value);
+            right = value;
+            // TODO set right
+        }
+    };
     @FXML
     private ListView<PageItem> thumbnail;
     @FXML
@@ -106,30 +152,13 @@ public class TwoFaceController implements Initializable {
         thumbnail.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<PageItem>() {
             @Override
             public void changed(ObservableValue<? extends PageItem> self, PageItem oldValue, PageItem newValue) {
-                selectPage(newValue);
+                setCurrentPage(newValue);
             }
         });
 
-        twoFace.selectedProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> self, Boolean oldValue, Boolean newValue) {
-                log.log(Level.INFO, "twoFace.selectedProperty: {0}", self);
-            }
-        });
-
-        withCover.selectedProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> self, Boolean oldValue, Boolean newValue) {
-                setCover(newValue);
-            }
-        });
-
-        rightDirection.selectedProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> self, Boolean oldValue, Boolean newValue) {
-                log.log(Level.INFO, "rightDirection.selectedProperty: {0}", self);
-            }
-        });
+        twoFace.selectedProperty().bindBidirectional(faceProprty);
+        withCover.selectedProperty().bindBidirectional(coverProprty);
+        rightDirection.selectedProperty().bindBidirectional(rightProprty);
     }
 
     /**
@@ -137,7 +166,7 @@ public class TwoFaceController implements Initializable {
      *
      * @param page ページ
      */
-    private void selectPage(PageItem page) {
+    private void setCurrentPage(PageItem page) {
         log.log(Level.INFO, "selectPage: {0}", page);
         if (page != null) {
             int index = page.value;
