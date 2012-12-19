@@ -172,7 +172,7 @@ public class TwoFaceController implements Initializable {
     }
 
     /**
-     * 表紙あり／表紙なしを設定します。
+     * インデックスを設定します。
      *
      * @param withCover 表紙ありの場合は true
      */
@@ -182,13 +182,14 @@ public class TwoFaceController implements Initializable {
             return;
         }
 
+        origin = withCover ? 0 : 1;
         int index = thumbnail.getSelectionModel().getSelectedIndex();
-        int pageCount = book.getPageCount() / 2 * 2 + 1;
+        int pageCount = (book.getPageCount() - origin) / 2 + 1;
+        log.log(Level.INFO, "thumbnail: {0} ({1})", new Object[]{book.getPageCount(), pageCount});
 
         ArrayList<PageItem> pages = new ArrayList<>();
-        origin = withCover ? 0 : 1;
-        for (int i = 0; i < pageCount; i += 2) {
-            pages.add(new PageItem(i, origin));
+        for (int i = 0; i < pageCount; i++) {
+            pages.add(new PageItem(i * 2, origin));
         }
         ObservableList<PageItem> names = FXCollections.observableArrayList(pages);
         thumbnail.setItems(names);
@@ -287,7 +288,7 @@ public class TwoFaceController implements Initializable {
             thumbnail.requestFocus();
 
             int pageCount = book.getPageCount() / 2 * 2 + 1;
-            log.log(Level.INFO, "ページ数: {0} ({1})", new Object[]{book.getPageCount(), pageCount});
+            log.log(Level.INFO, "pagination: {0} ({1})", new Object[]{book.getPageCount(), pageCount});
             pagination.setPageCount(pageCount);
             pagination.layout();
         } catch (IOException ex) {
