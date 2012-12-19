@@ -38,10 +38,8 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.Pagination;
 import javafx.scene.control.RadioMenuItem;
-import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.Clipboard;
@@ -209,7 +207,7 @@ public class TwoFaceController implements Initializable {
         HBox hbox = new HBox();
 
         if (book == null) {
-            Label label = lastError != null ? new Label("ファイルを読み込めません。: " + lastError) : new Label("ファイルを選択してください。");
+            Label label = new Label(lastError != null ? "ファイルを読み込めません。: " + lastError : "ファイルを選択してください。");
             hbox.getChildren().add(label);
             return hbox;
         }
