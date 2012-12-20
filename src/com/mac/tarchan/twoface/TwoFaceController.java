@@ -108,6 +108,7 @@ public class TwoFaceController implements Initializable {
             // TODO set right
         }
     };
+    private DoubleBinding viewWidth;
     private DoubleBinding viewHeight;
     @FXML
     private ListView<PageItem> thumbnail;
@@ -158,14 +159,25 @@ public class TwoFaceController implements Initializable {
 //            }
 //        });
 
-        viewHeight = new DoubleBinding() {
+        viewWidth = new DoubleBinding() {
             {
-                super.bind(pagination.widthProperty(), pagination.heightProperty());
+                super.bind(pagination.widthProperty());
             }
 
             @Override
             protected double computeValue() {
-                // TODO ウインドウ最大化のとき再計算されない
+                return pagination.widthProperty().get() / 2;
+            }
+        };
+        viewHeight = new DoubleBinding() {
+            {
+                super.bind(pagination.heightProperty());
+            }
+
+            @Override
+            protected double computeValue() {
+                // FIXME Windowsでウインドウ最大化のとき再計算されない
+                // FIXME まじめに計算するとディレイが大きくて使えない
 //                double gap = pagination.heightProperty().get() - pagination.getBaselineOffset();
                 double gap = 61;
                 return pagination.heightProperty().get() - gap;
@@ -246,12 +258,14 @@ public class TwoFaceController implements Initializable {
         Image page1 = book.getImage(index + origin);
 
         ImageView view0 = new ImageView(page0);
+        view0.fitWidthProperty().bind(viewWidth);
         view0.fitHeightProperty().bind(viewHeight);
         view0.setPreserveRatio(true);
         view0.setSmooth(true);
         view0.setCache(true);
 
         ImageView view1 = new ImageView(page1);
+        view1.fitWidthProperty().bind(viewWidth);
         view1.fitHeightProperty().bind(viewHeight);
         view1.setPreserveRatio(true);
         view1.setSmooth(true);
