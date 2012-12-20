@@ -179,7 +179,7 @@ public class TwoFaceController implements Initializable {
                 // FIXME Windowsでウインドウ最大化のとき再計算されない
                 // FIXME まじめに計算するとディレイが大きくて使えない
 //                double gap = pagination.heightProperty().get() - pagination.getBaselineOffset();
-                double gap = 61;
+                double gap = 0; // 61
                 return pagination.heightProperty().get() - gap;
             }
         };

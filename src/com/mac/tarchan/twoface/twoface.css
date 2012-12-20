@@ -1,5 +1,5 @@
 /*
- * Empty Stylesheet file.
+ * TwoFace Stylesheet file.
  */
 
 .mainFxmlClass {
@@ -12,5 +12,5 @@
 }
 
 .pagination .page {
-    -fx-background-color: #DDF1F8;
+    -fx-background-color: aquamarine;
 }
