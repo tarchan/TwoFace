@@ -145,7 +145,7 @@ public class TwoFaceController implements Initializable {
                 return createPage(index);
             }
         });
-        pagination.setPageCount(1);
+//        pagination.setPageCount(Pagination.INDETERMINATE);
 //        pagination.addEventFilter(EventType.ROOT, new EventHandler() {
 //            @Override
 //            public void handle(Event event) {
