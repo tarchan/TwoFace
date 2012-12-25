@@ -26,8 +26,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.beans.binding.DoubleBinding;
+import javafx.beans.binding.StringBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -108,8 +111,10 @@ public class TwoFaceController implements Initializable {
             // TODO set right
         }
     };
-    private DoubleBinding viewWidth;
-    private DoubleBinding viewHeight;
+    private DoubleBinding widthBinding;
+    private DoubleBinding heightBinding;
+    private StringProperty titleProperty = new SimpleStringProperty();
+    public StringBinding titleBinding;
     @FXML
     private ListView<PageItem> thumbnail;
     @FXML
@@ -159,7 +164,7 @@ public class TwoFaceController implements Initializable {
 //            }
 //        });
 
-        viewWidth = new DoubleBinding() {
+        widthBinding = new DoubleBinding() {
             {
                 super.bind(pagination.widthProperty());
             }
@@ -169,7 +174,7 @@ public class TwoFaceController implements Initializable {
                 return pagination.widthProperty().get() / 2;
             }
         };
-        viewHeight = new DoubleBinding() {
+        heightBinding = new DoubleBinding() {
             {
                 super.bind(pagination.heightProperty());
             }
@@ -181,6 +186,17 @@ public class TwoFaceController implements Initializable {
 //                double gap = pagination.heightProperty().get() - pagination.getBaselineOffset();
                 double gap = 0; // 61
                 return pagination.heightProperty().get() - gap;
+            }
+        };
+
+        titleBinding = new StringBinding() {
+            {
+                super.bind(titleProperty);
+            }
+
+            @Override
+            protected String computeValue() {
+                return titleProperty.get() != null ? String.format("%s - TwoFace", titleProperty.get()) : "TwoFace";
             }
         };
 
@@ -258,15 +274,15 @@ public class TwoFaceController implements Initializable {
         Image page1 = book.getImage(index + origin);
 
         ImageView view0 = new ImageView(page0);
-        view0.fitWidthProperty().bind(viewWidth);
-        view0.fitHeightProperty().bind(viewHeight);
+        view0.fitWidthProperty().bind(widthBinding);
+        view0.fitHeightProperty().bind(heightBinding);
         view0.setPreserveRatio(true);
         view0.setSmooth(true);
         view0.setCache(true);
 
         ImageView view1 = new ImageView(page1);
-        view1.fitWidthProperty().bind(viewWidth);
-        view1.fitHeightProperty().bind(viewHeight);
+        view1.fitWidthProperty().bind(widthBinding);
+        view1.fitHeightProperty().bind(heightBinding);
         view1.setPreserveRatio(true);
         view1.setSmooth(true);
         view1.setCache(true);
@@ -309,6 +325,7 @@ public class TwoFaceController implements Initializable {
 
             log.log(Level.INFO, "ファイルを開きます。: {0}", file);
             book = BookFactory.getBook(file);
+            titleProperty.set(file.getName());
 
             setCover(coverProprty.get());
             thumbnail.getSelectionModel().select(0);

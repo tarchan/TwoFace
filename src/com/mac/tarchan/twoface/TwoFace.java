@@ -36,7 +36,9 @@ public class TwoFace extends Application {
      */
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("TwoFace.fxml"));
+        FXMLLoader fxml = new FXMLLoader(getClass().getResource("TwoFace.fxml"));
+        Parent root = (Parent) fxml.load();
+        TwoFaceController controller = fxml.getController();
 
         // コマンドライン引数をユーザーデータに設定します。
         if (getParameters().getNamed().containsKey("file")) {
@@ -46,7 +48,7 @@ public class TwoFace extends Application {
         Scene scene = new Scene(root);
 
         stage.setScene(scene);
-        stage.setTitle("TwoFace");
+        stage.titleProperty().bind(controller.titleBinding);
         stage.show();
     }
 
