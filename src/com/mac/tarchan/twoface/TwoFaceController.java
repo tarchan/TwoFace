@@ -38,6 +38,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
@@ -263,6 +264,7 @@ public class TwoFaceController implements Initializable {
         log.log(Level.INFO, "createPage: index={0} ({1})", new Object[]{index, origin});
 
         HBox hbox = new HBox();
+        hbox.setAlignment(Pos.TOP_CENTER);
 
         if (book == null) {
             Label label = new Label(lastError != null ? "ファイルを読み込めません。: " + lastError : "ファイルを選択してください。");
@@ -273,23 +275,24 @@ public class TwoFaceController implements Initializable {
         Image page0 = book.getImage(index + origin - 1);
         Image page1 = book.getImage(index + origin);
 
-        ImageView view0 = new ImageView(page0);
-        view0.fitWidthProperty().bind(widthBinding);
-        view0.fitHeightProperty().bind(heightBinding);
-        view0.setPreserveRatio(true);
-        view0.setSmooth(true);
-        view0.setCache(true);
+        if (page1 != null) {
+            hbox.getChildren().add(wrapView(page1));
+        }
+        if (page0 != null) {
+            hbox.getChildren().add(wrapView(page0));
+        }
 
-        ImageView view1 = new ImageView(page1);
-        view1.fitWidthProperty().bind(widthBinding);
-        view1.fitHeightProperty().bind(heightBinding);
-        view1.setPreserveRatio(true);
-        view1.setSmooth(true);
-        view1.setCache(true);
-
-        hbox.getChildren().add(view1);
-        hbox.getChildren().add(view0);
         return hbox;
+    }
+
+    private ImageView wrapView(Image image) {
+        ImageView view = new ImageView(image);
+        view.fitWidthProperty().bind(widthBinding);
+        view.fitHeightProperty().bind(heightBinding);
+        view.setPreserveRatio(true);
+        view.setSmooth(true);
+        view.setCache(true);
+        return view;
     }
 
     /**
