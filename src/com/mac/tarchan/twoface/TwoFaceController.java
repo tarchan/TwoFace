@@ -80,6 +80,7 @@ public class TwoFaceController implements Initializable {
             log.log(Level.INFO, "faceProprty.set: {0}", value);
             face = value;
             // TODO set face
+            pagination.requestLayout();
         }
     };
     private boolean cover = true;
@@ -95,6 +96,7 @@ public class TwoFaceController implements Initializable {
             log.log(Level.INFO, "coverProprty.set: {0}", value);
             cover = value;
             setCover(value);
+            pagination.requestLayout();
         }
     };
     private boolean right = true;
@@ -109,7 +111,7 @@ public class TwoFaceController implements Initializable {
         public void set(boolean value) {
             log.log(Level.INFO, "rightProprty.set: {0}", value);
             right = value;
-            // TODO set right
+            pagination.requestLayout();
         }
     };
     private DoubleBinding widthBinding;
@@ -250,7 +252,7 @@ public class TwoFaceController implements Initializable {
         if (page != null) {
             int index = page.value;
             log.log(Level.INFO, "index={0}", index);
-            pagination.currentPageIndexProperty().setValue(index);
+            pagination.currentPageIndexProperty().set(index);
         }
     }
 
@@ -275,11 +277,20 @@ public class TwoFaceController implements Initializable {
         Image page0 = book.getImage(index + origin - 1);
         Image page1 = book.getImage(index + origin);
 
-        if (page1 != null) {
-            hbox.getChildren().add(wrapView(page1));
-        }
-        if (page0 != null) {
-            hbox.getChildren().add(wrapView(page0));
+        if (rightProprty.get()) {
+            if (page1 != null) {
+                hbox.getChildren().add(wrapView(page1));
+            }
+            if (page0 != null) {
+                hbox.getChildren().add(wrapView(page0));
+            }
+        } else {
+            if (page0 != null) {
+                hbox.getChildren().add(wrapView(page0));
+            }
+            if (page1 != null) {
+                hbox.getChildren().add(wrapView(page1));
+            }
         }
 
         return hbox;
