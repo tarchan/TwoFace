@@ -67,56 +67,53 @@ public class TwoFaceController implements Initializable {
     private Book book;
     private int origin = 0;
     private Exception lastError;
-    private boolean face = true;
-    private BooleanProperty faceProprty = new SimpleBooleanProperty(face) {
+    private BooleanProperty faceProprty = new SimpleBooleanProperty(this, "face", true) {
         @Override
         public boolean get() {
             log.log(Level.INFO, "faceProprty.get:");
-            return face;
+            return super.get();
         }
 
         @Override
         public void set(boolean value) {
             log.log(Level.INFO, "faceProprty.set: {0}", value);
-            face = value;
+            super.set(value);
             // TODO set face
             pagination.requestLayout();
         }
     };
-    private boolean cover = true;
-    private BooleanProperty coverProprty = new SimpleBooleanProperty(cover) {
+    private BooleanProperty coverProprty = new SimpleBooleanProperty(this, "cover", true) {
         @Override
         public boolean get() {
             log.log(Level.INFO, "coverProprty.get:");
-            return cover;
+            return super.get();
         }
 
         @Override
         public void set(boolean value) {
             log.log(Level.INFO, "coverProprty.set: {0}", value);
-            cover = value;
+            super.set(value);
             setCover(value);
             pagination.requestLayout();
         }
     };
-    private boolean right = true;
-    private BooleanProperty rightProprty = new SimpleBooleanProperty(right) {
+    private BooleanProperty rightProprty = new SimpleBooleanProperty(this, "right", true) {
         @Override
         public boolean get() {
             log.log(Level.INFO, "rightProprty.get:");
-            return right;
+            return super.get();
         }
 
         @Override
         public void set(boolean value) {
             log.log(Level.INFO, "rightProprty.set: {0}", value);
-            right = value;
+            super.set(value);
             pagination.requestLayout();
         }
     };
     private DoubleBinding widthBinding;
     private DoubleBinding heightBinding;
-    private ObjectProperty<File> fileProperty = new SimpleObjectProperty<>();
+    private ObjectProperty<File> fileProperty = new SimpleObjectProperty<>(this, "file");
     public StringBinding titleBinding;
     @FXML
     private ListView<PageItem> thumbnail;
