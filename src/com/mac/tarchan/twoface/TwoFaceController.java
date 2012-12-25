@@ -28,9 +28,9 @@ import javafx.application.Platform;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -113,7 +113,7 @@ public class TwoFaceController implements Initializable {
     };
     private DoubleBinding widthBinding;
     private DoubleBinding heightBinding;
-    private StringProperty titleProperty = new SimpleStringProperty();
+    private ObjectProperty<File> fileProperty = new SimpleObjectProperty<>();
     public StringBinding titleBinding;
     @FXML
     private ListView<PageItem> thumbnail;
@@ -191,12 +191,12 @@ public class TwoFaceController implements Initializable {
 
         titleBinding = new StringBinding() {
             {
-                super.bind(titleProperty);
+                super.bind(fileProperty, thumbnail.getSelectionModel().selectedItemProperty());
             }
 
             @Override
             protected String computeValue() {
-                return titleProperty.get() != null ? String.format("%s - TwoFace", titleProperty.get()) : "TwoFace";
+                return fileProperty.get() != null ? String.format("(%s) %s - TwoFace", thumbnail.getSelectionModel().selectedItemProperty().get(), fileProperty.get().getName()) : "TwoFace";
             }
         };
 
@@ -325,7 +325,7 @@ public class TwoFaceController implements Initializable {
 
             log.log(Level.INFO, "ファイルを開きます。: {0}", file);
             book = BookFactory.getBook(file);
-            titleProperty.set(file.getName());
+            fileProperty.set(file);
 
             setCover(coverProprty.get());
             thumbnail.getSelectionModel().select(0);
