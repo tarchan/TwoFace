@@ -55,6 +55,7 @@ import javafx.scene.input.ScrollEvent;
 import javafx.scene.input.SwipeEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.util.Callback;
 
@@ -292,8 +293,12 @@ public class TwoFaceController implements Initializable {
 
         Image leftImage = book.getImage(getPageIndex(index, rightProprty.not().get()));
         Image rightImage = book.getImage(getPageIndex(index, rightProprty.get()));
+        log.log(Level.INFO, "createContent: left={0}, right={1}", new Object[]{leftImage, rightImage});
 
         if (leftImage != null) {
+            Color color = leftImage.getPixelReader().getColor(0, 0);
+            log.log(Level.INFO, "color={0}", color);
+            // TODO 背景色をクロスフェード
             children.add(wrapView(leftImage));
         }
         if (rightImage != null) {
@@ -350,11 +355,9 @@ public class TwoFaceController implements Initializable {
             log.log(Level.INFO, "パラメータ={0}", param);
 
             File file = param != null ? new File(param) : fileChooser.showOpenDialog(null);
-            if (file == null) {
-                return;
+            if (file != null) {
+                setFile(file);
             }
-
-            setFile(file);
         } catch (IOException ex) {
             log.log(Level.SEVERE, "ファイルを読み込めません。", ex);
             lastError = ex;
