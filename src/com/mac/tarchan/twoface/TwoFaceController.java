@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -97,6 +98,8 @@ public class TwoFaceController implements Initializable {
             super.set(value);
             setCover(value);
             pagination.requestLayout();
+            content.getChildren().removeAll(content.getChildren());
+            content.getChildren().addAll(createContent(pagination.getCurrentPageIndex()));
         }
     };
     private BooleanProperty rightProprty = new SimpleBooleanProperty(this, "right", true) {
@@ -111,11 +114,12 @@ public class TwoFaceController implements Initializable {
             log.log(Level.INFO, "rightProprty.set: {0}", value);
             super.set(value);
             pagination.requestLayout();
-            Object[] children = content.getChildren().toArray();
-            if (children.length == 2) {
+            if (content.getChildren().size() == 2) {
                 // TODO 入れ替えアニメーションを追加
+                Node[] children = new Node[2];
+                content.getChildren().toArray(children);
                 content.getChildren().removeAll(content.getChildren());
-                content.getChildren().addAll((Node) children[1], (Node) children[0]);
+                content.getChildren().addAll(children[1], children[0]);
             }
         }
     };
@@ -270,14 +274,20 @@ public class TwoFaceController implements Initializable {
      */
     private Node createPage(Integer index) {
         log.log(Level.INFO, "createPage: index={0} ({1})", new Object[]{index, origin});
-
         HBox hbox = new HBox();
         hbox.setAlignment(Pos.TOP_CENTER);
+        hbox.getChildren().addAll(createContent(index));
+        content = hbox;
+        return hbox;
+    }
+
+    private List<Node> createContent(Integer index) {
+        List<Node> children = new ArrayList<>();
 
         if (book == null) {
             Label label = new Label(lastError != null ? "ファイルを読み込めません。: " + lastError : "ファイルを選択してください。");
-            hbox.getChildren().add(label);
-            return hbox;
+            children.add(label);
+            return children;
         }
 
         Image page0 = book.getImage(index + origin - 1);
@@ -285,22 +295,20 @@ public class TwoFaceController implements Initializable {
 
         if (rightProprty.get()) {
             if (page1 != null) {
-                hbox.getChildren().add(wrapView(page1));
+                children.add(wrapView(page1));
             }
             if (page0 != null) {
-                hbox.getChildren().add(wrapView(page0));
+                children.add(wrapView(page0));
             }
         } else {
             if (page0 != null) {
-                hbox.getChildren().add(wrapView(page0));
+                children.add(wrapView(page0));
             }
             if (page1 != null) {
-                hbox.getChildren().add(wrapView(page1));
+                children.add(wrapView(page1));
             }
         }
-
-        content = hbox;
-        return hbox;
+        return children;
     }
 
     private ImageView wrapView(Image image) {
