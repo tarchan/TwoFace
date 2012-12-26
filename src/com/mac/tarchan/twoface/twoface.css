@@ -14,3 +14,15 @@
 .pagination .page {
     -fx-background-color: dodgerblue;
 }
+
+.pagination .page .label {
+    -fx-text-fill: white;
+}
+
+.pagination .pagination-control {
+
+}
+
+.imageview {
+
+}
