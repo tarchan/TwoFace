@@ -236,7 +236,7 @@ public class TwoFaceController implements Initializable {
         thumbnail.setItems(names);
         thumbnail.getSelectionModel().select(index);
         thumbnail.requestFocus();
-        pagination.layout();
+        pagination.requestLayout();
     }
 
     /**
@@ -334,22 +334,26 @@ public class TwoFaceController implements Initializable {
                 return;
             }
 
-            log.log(Level.INFO, "ファイルを開きます。: {0}", file);
-            book = BookFactory.getBook(file);
-            fileProperty.set(file);
-
-            setCover(coverProprty.get());
-            thumbnail.getSelectionModel().select(0);
-            thumbnail.requestFocus();
-
-            int pageCount = book.getPageCount() / 2 * 2 + 1;
-            log.log(Level.INFO, "pagination: {0} ({1})", new Object[]{book.getPageCount(), pageCount});
-            pagination.setPageCount(pageCount);
-            pagination.layout();
+            setFile(file);
         } catch (IOException ex) {
             log.log(Level.SEVERE, "ファイルを読み込めません。", ex);
             lastError = ex;
+            // TODO エラーダイアログを表示する
         }
+    }
+
+    private void setFile(File file) throws IOException {
+        log.log(Level.INFO, "ファイルを開きます。: {0}", file);
+        book = BookFactory.getBook(file);
+        fileProperty.set(file);
+
+        setCover(coverProprty.get());
+        thumbnail.getSelectionModel().select(0);
+        thumbnail.requestFocus();
+
+        int pageCount = book.getPageCount() / 2 * 2 + 1;
+        log.log(Level.INFO, "pagination: {0} ({1})", new Object[]{book.getPageCount(), pageCount});
+        pagination.setPageCount(pageCount);
     }
 
     @FXML
