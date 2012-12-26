@@ -45,6 +45,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Pagination;
 import javafx.scene.control.RadioMenuItem;
+import javafx.scene.effect.Reflection;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.Clipboard;
@@ -300,6 +301,8 @@ public class TwoFaceController implements Initializable {
         view.setPreserveRatio(true);
         view.setSmooth(true);
         view.setCache(true);
+        Reflection reflection = new Reflection();
+        view.setEffect(reflection);
         return view;
     }
 
