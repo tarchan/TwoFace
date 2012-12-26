@@ -53,6 +53,7 @@ import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.input.SwipeEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.util.Callback;
 
@@ -110,12 +111,19 @@ public class TwoFaceController implements Initializable {
             log.log(Level.INFO, "rightProprty.set: {0}", value);
             super.set(value);
             pagination.requestLayout();
+            Object[] children = content.getChildren().toArray();
+            if (children.length == 2) {
+                // TODO 入れ替えアニメーションを追加
+                content.getChildren().removeAll(content.getChildren());
+                content.getChildren().addAll((Node) children[1], (Node) children[0]);
+            }
         }
     };
     private DoubleBinding widthBinding;
     private DoubleBinding heightBinding;
     private ObjectProperty<File> fileProperty = new SimpleObjectProperty<>(this, "file");
     public StringBinding titleBinding;
+    Pane content;
     @FXML
     private ListView<PageItem> thumbnail;
     @FXML
@@ -291,6 +299,7 @@ public class TwoFaceController implements Initializable {
             }
         }
 
+        content = hbox;
         return hbox;
     }
 
