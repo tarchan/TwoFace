@@ -163,7 +163,7 @@ public class TwoFaceController implements Initializable {
                 return createPage(index);
             }
         });
-//        pagination.setPageCount(Pagination.INDETERMINATE);
+
 //        pagination.addEventFilter(EventType.ROOT, new EventHandler() {
 //            @Override
 //            public void handle(Event event) {
@@ -281,7 +281,7 @@ public class TwoFaceController implements Initializable {
         return hbox;
     }
 
-    private List<Node> createContent(Integer index) {
+    private List<Node> createContent(int index) {
         List<Node> children = new ArrayList<>();
 
         if (book == null) {
@@ -290,25 +290,25 @@ public class TwoFaceController implements Initializable {
             return children;
         }
 
-        Image page0 = book.getImage(index + origin - 1);
-        Image page1 = book.getImage(index + origin);
+        Image leftImage = book.getImage(getPageIndex(index, rightProprty.not().get()));
+        Image rightImage = book.getImage(getPageIndex(index, rightProprty.get()));
 
-        if (rightProprty.get()) {
-            if (page1 != null) {
-                children.add(wrapView(page1));
-            }
-            if (page0 != null) {
-                children.add(wrapView(page0));
-            }
-        } else {
-            if (page0 != null) {
-                children.add(wrapView(page0));
-            }
-            if (page1 != null) {
-                children.add(wrapView(page1));
-            }
+        if (leftImage != null) {
+            children.add(wrapView(leftImage));
         }
+        if (rightImage != null) {
+            children.add(wrapView(rightImage));
+        }
+
         return children;
+    }
+
+    private int getPageIndex(int index, boolean right) {
+        if (right) {
+            return index + origin - 1;
+        } else {
+            return index + origin;
+        }
     }
 
     private ImageView wrapView(Image image) {
