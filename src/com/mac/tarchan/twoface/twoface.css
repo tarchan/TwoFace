@@ -11,6 +11,11 @@
     -fx-border-width: 3;
 }
 
+.pagination {
+    /*-fx-background-color: goldenrod;*/
+    /*-fx-background-image: url(bg_tile.jpg);*/
+}
+
 .pagination .page {
     -fx-background-color: dodgerblue;
 }
@@ -24,5 +29,6 @@
 }
 
 .imageview {
-
+    /*-fx-rotate: 45;*/
+    /*-fx-effect: dropshadow(gaussian, #000, 0, 0, 0, 0);*/
 }

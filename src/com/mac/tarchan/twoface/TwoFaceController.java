@@ -64,7 +64,7 @@ import javafx.util.Callback;
  * @author Takashi Ogura <tarchan at mac.com>
  */
 public class TwoFaceController implements Initializable {
-
+    
     private static final Logger log = Logger.getLogger(TwoFaceController.class.getName());
     private FileChooser fileChooser;
     private Book book;
@@ -76,7 +76,7 @@ public class TwoFaceController implements Initializable {
             log.log(Level.INFO, "faceProperty.get: {0}", super.get());
             return super.get();
         }
-
+        
         @Override
         public void set(boolean value) {
             log.log(Level.INFO, "faceProperty.set: {0}", value);
@@ -91,7 +91,7 @@ public class TwoFaceController implements Initializable {
             log.log(Level.INFO, "coverProperty.get: {0}", super.get());
             return super.get();
         }
-
+        
         @Override
         public void set(boolean value) {
             log.log(Level.INFO, "coverProperty.set: {0}", value);
@@ -108,7 +108,7 @@ public class TwoFaceController implements Initializable {
             log.log(Level.INFO, "rightProperty.get: {0}", super.get());
             return super.get();
         }
-
+        
         @Override
         public void set(boolean value) {
             log.log(Level.INFO, "rightProperty.set: {0}", value);
@@ -146,7 +146,7 @@ public class TwoFaceController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         log.log(Level.INFO, "初期化します。: {0}", url);
-
+        
         fileChooser = new FileChooser();
         FileChooser.ExtensionFilter pdfFilter = new FileChooser.ExtensionFilter("PDF ファイル (*.pdf)", "*.pdf");
         FileChooser.ExtensionFilter zipFilter = new FileChooser.ExtensionFilter("ZIP ファイル (*.zip)", "*.zip");
@@ -154,33 +154,33 @@ public class TwoFaceController implements Initializable {
         fileChooser.getExtensionFilters().add(pdfFilter);
         fileChooser.getExtensionFilters().add(zipFilter);
         fileChooser.getExtensionFilters().add(allFilter);
-
+        
         pagination.setPageFactory(new Callback<Integer, Node>() {
             @Override
             public Node call(Integer index) {
                 return createPage(index);
             }
         });
-
+        
         titleBinding = new StringBinding() {
             {
                 super.bind(fileProperty, thumbnail.getSelectionModel().selectedItemProperty());
             }
-
+            
             @Override
             protected String computeValue() {
                 log.log(Level.INFO, "titleBinding: {0} ({1})", new Object[]{fileProperty, thumbnail.getSelectionModel().selectedItemProperty()});
                 return fileProperty.isNull().get() ? "TwoFace" : String.format("(%s) %s - TwoFace", thumbnail.getSelectionModel().selectedItemProperty().get(), fileProperty.get().getName());
             }
         };
-
+        
         thumbnail.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<PageItem>() {
             @Override
             public void changed(ObservableValue<? extends PageItem> self, PageItem oldValue, PageItem newValue) {
                 setCurrentPage(newValue);
             }
         });
-
+        
         twoFaceMenu.selectedProperty().bindBidirectional(faceProperty);
         withCoverMenu.selectedProperty().bindBidirectional(coverProperty);
         rightDirectionMenu.selectedProperty().bindBidirectional(rightProperty);
@@ -194,15 +194,15 @@ public class TwoFaceController implements Initializable {
         if (book == null) {
             return;
         }
-
+        
         origin = coverProperty.get() ? 0 : 1;
         int index = thumbnail.getSelectionModel().getSelectedIndex();
         ArrayList<PageItem> pages = new ArrayList<>();
-
+        
         if (faceProperty.get()) {
             int pageCount = (book.getPageCount() - origin) / 2 + 1;
             log.log(Level.INFO, "thumbnail: {0} ({1})", new Object[]{book.getPageCount(), pageCount});
-
+            
             for (int i = 0; i < pageCount; i++) {
                 pages.add(new PageItem(i * 2, origin));
             }
@@ -212,7 +212,7 @@ public class TwoFaceController implements Initializable {
                 pages.add(new PageItem(i, origin));
             }
         }
-
+        
         ObservableList<PageItem> names = FXCollections.observableArrayList(pages);
         thumbnail.setItems(names);
         thumbnail.getSelectionModel().select(index);
@@ -248,21 +248,21 @@ public class TwoFaceController implements Initializable {
         currentPane = hbox;
         return hbox;
     }
-
+    
     private List<Node> createChildren(int index) {
         List<Node> children = new ArrayList<>();
-
+        
         if (book == null) {
             Label label = new Label(lastError != null ? "ファイルを読み込めません。: " + lastError : "ファイルを選択してください。");
             children.add(label);
             return children;
         }
-
+        
         if (faceProperty.get()) {
             Image leftImage = book.getImage(getPageIndex(index, rightProperty.not().get()));
             Image rightImage = book.getImage(getPageIndex(index, rightProperty.get()));
             log.log(Level.INFO, "createContent: left={0}, right={1}", new Object[]{leftImage, rightImage});
-
+            
             if (leftImage != null) {
                 Color color = leftImage.getPixelReader().getColor(0, 0);
                 log.log(Level.INFO, "color={0}", color);
@@ -276,10 +276,10 @@ public class TwoFaceController implements Initializable {
             Image image = book.getImage(index);
             children.add(wrapView(image));
         }
-
+        
         return children;
     }
-
+    
     private int getPageIndex(int index, boolean right) {
         if (right) {
             return index + origin - 1;
@@ -287,9 +287,10 @@ public class TwoFaceController implements Initializable {
             return index + origin;
         }
     }
-
+    
     private ImageView wrapView(Image image) {
         ImageView view = new ImageView(image);
+        view.getStyleClass().add("imageview");
         view.fitWidthProperty().bind(pagination.widthProperty().divide(2));
         view.fitHeightProperty().bind(pagination.heightProperty());
         view.setPreserveRatio(true);
@@ -316,16 +317,16 @@ public class TwoFaceController implements Initializable {
         log.log(Level.INFO, "userData={0}", root.getUserData());
         return root;
     }
-
+    
     @FXML
     private void handleOpen(ActionEvent event) {
         try {
             log.log(Level.INFO, "ファイルを選択します。");
-
+            
             Parent root = getRoot();
             String param = (String) root.getUserData();
             log.log(Level.INFO, "パラメータ={0}", param);
-
+            
             File file = param != null ? new File(param) : fileChooser.showOpenDialog(null);
             if (file != null) {
                 setFile(file);
@@ -336,27 +337,27 @@ public class TwoFaceController implements Initializable {
             // TODO エラーダイアログを表示する
         }
     }
-
+    
     private void setFile(File file) throws IOException {
         log.log(Level.INFO, "ファイルを開きます。: {0}", file);
         book = BookFactory.getBook(file);
         fileProperty.set(file);
-
+        
         updateIndex();
         thumbnail.getSelectionModel().select(0);
         thumbnail.requestFocus();
-
+        
         int pageCount = book.getPageCount() / 2 * 2 + 1;
         log.log(Level.INFO, "pagination: {0} ({1})", new Object[]{book.getPageCount(), pageCount});
         pagination.setPageCount(pageCount);
     }
-
+    
     @FXML
     private void handleExit(ActionEvent event) {
         log.log(Level.INFO, "アプリケーションを終了します。");
         Platform.exit();
     }
-
+    
     @FXML
     private void handleCopy(ActionEvent event) {
         log.log(Level.INFO, "コピー");
@@ -364,10 +365,10 @@ public class TwoFaceController implements Initializable {
         if (page == null) {
             return;
         }
-
+        
         String text = page.name;
         Image image = book.getImage(page.value + origin);
-
+        
         Clipboard clipboard = Clipboard.getSystemClipboard();
         ClipboardContent content = new ClipboardContent();
         if (text != null) {
@@ -378,12 +379,12 @@ public class TwoFaceController implements Initializable {
         }
         clipboard.setContent(content);
     }
-
+    
     @FXML
     private void handleFirst(ActionEvent event) {
         thumbnail.getSelectionModel().select(0);
     }
-
+    
     @FXML
     private void handlePrev(ActionEvent event) {
         int index = thumbnail.getSelectionModel().getSelectedIndex();
@@ -392,39 +393,39 @@ public class TwoFaceController implements Initializable {
         }
         thumbnail.getSelectionModel().select(index - 1);
     }
-
+    
     @FXML
     private void handleNext(ActionEvent event) {
         int index = thumbnail.getSelectionModel().getSelectedIndex();
         thumbnail.getSelectionModel().select(index + 1);
     }
-
+    
     @FXML
     private void handleLast(ActionEvent event) {
         int index = thumbnail.getItems().size() - 1;
         thumbnail.getSelectionModel().select(index);
     }
-
+    
     @FXML
     private void handleSwipeLeft(SwipeEvent event) {
         log.log(Level.INFO, "handleSwipeLeft: {0}", event);
     }
-
+    
     @FXML
     private void handleSwipeRight(SwipeEvent event) {
         log.log(Level.INFO, "handleSwipeRight: {0}", event);
     }
-
+    
     @FXML
     private void handleSwipeUp(SwipeEvent event) {
         log.log(Level.INFO, "handleSwipeUp: {0}", event);
     }
-
+    
     @FXML
     private void handleSwipeDown(SwipeEvent event) {
         log.log(Level.INFO, "handleSwipeDown: {0}", event);
     }
-
+    
     @FXML
     private void handleScrollStarted(ScrollEvent event) {
         log.log(Level.INFO, "handleScrollStarted: {0} [{1},{2}]", new Object[]{event.getEventType().getName(), event.getDeltaX(), event.getDeltaY()});
