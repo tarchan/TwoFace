@@ -26,7 +26,6 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
-import javafx.beans.binding.DoubleBinding;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
@@ -99,8 +98,8 @@ public class TwoFaceController implements Initializable {
             super.set(value);
             setCover(value);
             pagination.requestLayout();
-            content.getChildren().removeAll(content.getChildren());
-            content.getChildren().addAll(createContent(pagination.getCurrentPageIndex()));
+            currentPane.getChildren().removeAll(currentPane.getChildren());
+            currentPane.getChildren().addAll(createContent(pagination.getCurrentPageIndex()));
         }
     };
     private BooleanProperty rightProprty = new SimpleBooleanProperty(this, "right", true) {
@@ -115,20 +114,18 @@ public class TwoFaceController implements Initializable {
             log.log(Level.INFO, "rightProprty.set: {0}", value);
             super.set(value);
             pagination.requestLayout();
-            if (content.getChildren().size() == 2) {
+            if (currentPane.getChildren().size() == 2) {
                 // TODO 入れ替えアニメーションを追加
                 Node[] children = new Node[2];
-                content.getChildren().toArray(children);
-                content.getChildren().removeAll(content.getChildren());
-                content.getChildren().addAll(children[1], children[0]);
+                currentPane.getChildren().toArray(children);
+                currentPane.getChildren().removeAll(currentPane.getChildren());
+                currentPane.getChildren().addAll(children[1], children[0]);
             }
         }
     };
-    private DoubleBinding widthBinding;
-    private DoubleBinding heightBinding;
     private ObjectProperty<File> fileProperty = new SimpleObjectProperty<>(this, "file");
     public StringBinding titleBinding;
-    Pane content;
+    Pane currentPane;
     @FXML
     private ListView<PageItem> thumbnail;
     @FXML
@@ -164,44 +161,6 @@ public class TwoFaceController implements Initializable {
                 return createPage(index);
             }
         });
-
-//        pagination.addEventFilter(EventType.ROOT, new EventHandler() {
-//            @Override
-//            public void handle(Event event) {
-//                log.log(Level.INFO, "addEventFilter: {0}", event.getEventType());
-//            }
-//        });
-//        pagination.setOnMouseDragged(new EventHandler<MouseEvent>() {
-//            @Override
-//            public void handle(MouseEvent event) {
-//                log.log(Level.INFO, "setOnMouseDragged: {0} [{1},{2}]", new Object[]{event.getEventType(), event.getX(), event.getY()});
-//            }
-//        });
-
-        widthBinding = new DoubleBinding() {
-            {
-                super.bind(pagination.widthProperty());
-            }
-
-            @Override
-            protected double computeValue() {
-                return pagination.widthProperty().get() / 2;
-            }
-        };
-        heightBinding = new DoubleBinding() {
-            {
-                super.bind(pagination.heightProperty());
-            }
-
-            @Override
-            protected double computeValue() {
-                // FIXME Windowsでウインドウ最大化のとき再計算されない
-                // FIXME まじめに計算するとディレイが大きくて使えない
-//                double gap = pagination.heightProperty().get() - pagination.getBaselineOffset();
-                double gap = 0; // 61
-                return pagination.heightProperty().get() - gap;
-            }
-        };
 
         titleBinding = new StringBinding() {
             {
@@ -278,7 +237,7 @@ public class TwoFaceController implements Initializable {
         HBox hbox = new HBox();
         hbox.setAlignment(Pos.TOP_CENTER);
         hbox.getChildren().addAll(createContent(index));
-        content = hbox;
+        currentPane = hbox;
         return hbox;
     }
 
@@ -318,8 +277,8 @@ public class TwoFaceController implements Initializable {
 
     private ImageView wrapView(Image image) {
         ImageView view = new ImageView(image);
-        view.fitWidthProperty().bind(widthBinding);
-        view.fitHeightProperty().bind(heightBinding);
+        view.fitWidthProperty().bind(pagination.widthProperty().divide(2));
+        view.fitHeightProperty().bind(pagination.heightProperty());
         view.setPreserveRatio(true);
         view.setSmooth(true);
         view.setCache(true);
@@ -414,17 +373,17 @@ public class TwoFaceController implements Initializable {
 
     @FXML
     private void handlePrev(ActionEvent event) {
-        int index = thumbnail.getSelectionModel().getSelectedIndex() - 1;
-        if (index < 0) {
+        int index = thumbnail.getSelectionModel().getSelectedIndex();
+        if (index <= 0) {
             return;
         }
-        thumbnail.getSelectionModel().select(index);
+        thumbnail.getSelectionModel().select(index - 1);
     }
 
     @FXML
     private void handleNext(ActionEvent event) {
-        int index = thumbnail.getSelectionModel().getSelectedIndex() + 1;
-        thumbnail.getSelectionModel().select(index);
+        int index = thumbnail.getSelectionModel().getSelectedIndex();
+        thumbnail.getSelectionModel().select(index + 1);
     }
 
     @FXML
