@@ -73,7 +73,7 @@ public class TwoFaceController implements Initializable {
     private BooleanProperty faceProperty = new SimpleBooleanProperty(this, "face", true) {
         @Override
         public boolean get() {
-            log.log(Level.INFO, "faceProperty.get:");
+            log.log(Level.INFO, "faceProperty.get: {0}", super.get());
             return super.get();
         }
 
@@ -88,7 +88,7 @@ public class TwoFaceController implements Initializable {
     private BooleanProperty coverProperty = new SimpleBooleanProperty(this, "cover", true) {
         @Override
         public boolean get() {
-            log.log(Level.INFO, "coverProperty.get:");
+            log.log(Level.INFO, "coverProperty.get: {0}", super.get());
             return super.get();
         }
 
@@ -105,7 +105,7 @@ public class TwoFaceController implements Initializable {
     private BooleanProperty rightProperty = new SimpleBooleanProperty(this, "right", true) {
         @Override
         public boolean get() {
-            log.log(Level.INFO, "rightProperty.get:");
+            log.log(Level.INFO, "rightProperty.get: {0}", super.get());
             return super.get();
         }
 
@@ -169,7 +169,8 @@ public class TwoFaceController implements Initializable {
 
             @Override
             protected String computeValue() {
-                return fileProperty.get() != null ? String.format("(%s) %s - TwoFace", thumbnail.getSelectionModel().selectedItemProperty().get(), fileProperty.get().getName()) : "TwoFace";
+                log.log(Level.INFO, "titleBinding: {0} ({1})", new Object[]{fileProperty, thumbnail.getSelectionModel().selectedItemProperty()});
+                return fileProperty.isNull().get() ? "TwoFace" : String.format("(%s) %s - TwoFace", thumbnail.getSelectionModel().selectedItemProperty().get(), fileProperty.get().getName());
             }
         };
 
