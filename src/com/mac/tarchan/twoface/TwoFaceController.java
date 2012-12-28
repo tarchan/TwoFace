@@ -70,48 +70,48 @@ public class TwoFaceController implements Initializable {
     private Book book;
     private int origin = 0;
     private Exception lastError;
-    private BooleanProperty faceProprty = new SimpleBooleanProperty(this, "face", true) {
+    private BooleanProperty faceProperty = new SimpleBooleanProperty(this, "face", true) {
         @Override
         public boolean get() {
-            log.log(Level.INFO, "faceProprty.get:");
+            log.log(Level.INFO, "faceProperty.get:");
             return super.get();
         }
 
         @Override
         public void set(boolean value) {
-            log.log(Level.INFO, "faceProprty.set: {0}", value);
+            log.log(Level.INFO, "faceProperty.set: {0}", value);
             super.set(value);
-            // TODO set face
+            updateIndex();
             pagination.requestLayout();
         }
     };
-    private BooleanProperty coverProprty = new SimpleBooleanProperty(this, "cover", true) {
+    private BooleanProperty coverProperty = new SimpleBooleanProperty(this, "cover", true) {
         @Override
         public boolean get() {
-            log.log(Level.INFO, "coverProprty.get:");
+            log.log(Level.INFO, "coverProperty.get:");
             return super.get();
         }
 
         @Override
         public void set(boolean value) {
-            log.log(Level.INFO, "coverProprty.set: {0}", value);
+            log.log(Level.INFO, "coverProperty.set: {0}", value);
             super.set(value);
-            setCover(value);
+            updateIndex();
             pagination.requestLayout();
             currentPane.getChildren().removeAll(currentPane.getChildren());
-            currentPane.getChildren().addAll(createContent(pagination.getCurrentPageIndex()));
+            currentPane.getChildren().addAll(createChildren(pagination.getCurrentPageIndex()));
         }
     };
-    private BooleanProperty rightProprty = new SimpleBooleanProperty(this, "right", true) {
+    private BooleanProperty rightProperty = new SimpleBooleanProperty(this, "right", true) {
         @Override
         public boolean get() {
-            log.log(Level.INFO, "rightProprty.get:");
+            log.log(Level.INFO, "rightProperty.get:");
             return super.get();
         }
 
         @Override
         public void set(boolean value) {
-            log.log(Level.INFO, "rightProprty.set: {0}", value);
+            log.log(Level.INFO, "rightProperty.set: {0}", value);
             super.set(value);
             pagination.requestLayout();
             if (currentPane.getChildren().size() == 2) {
@@ -180,31 +180,38 @@ public class TwoFaceController implements Initializable {
             }
         });
 
-        twoFaceMenu.selectedProperty().bindBidirectional(faceProprty);
-        withCoverMenu.selectedProperty().bindBidirectional(coverProprty);
-        rightDirectionMenu.selectedProperty().bindBidirectional(rightProprty);
+        twoFaceMenu.selectedProperty().bindBidirectional(faceProperty);
+        withCoverMenu.selectedProperty().bindBidirectional(coverProperty);
+        rightDirectionMenu.selectedProperty().bindBidirectional(rightProperty);
     }
 
     /**
      * インデックスを設定します。
-     *
-     * @param withCover 表紙ありの場合は true
      */
-    private void setCover(boolean withCover) {
-        log.log(Level.INFO, "setCover: {0}", withCover);
+    private void updateIndex() {
+        log.log(Level.INFO, "updateIndex: {0}", coverProperty.get());
         if (book == null) {
             return;
         }
 
-        origin = withCover ? 0 : 1;
+        origin = coverProperty.get() ? 0 : 1;
         int index = thumbnail.getSelectionModel().getSelectedIndex();
-        int pageCount = (book.getPageCount() - origin) / 2 + 1;
-        log.log(Level.INFO, "thumbnail: {0} ({1})", new Object[]{book.getPageCount(), pageCount});
-
         ArrayList<PageItem> pages = new ArrayList<>();
-        for (int i = 0; i < pageCount; i++) {
-            pages.add(new PageItem(i * 2, origin));
+
+        if (faceProperty.get()) {
+            int pageCount = (book.getPageCount() - origin) / 2 + 1;
+            log.log(Level.INFO, "thumbnail: {0} ({1})", new Object[]{book.getPageCount(), pageCount});
+
+            for (int i = 0; i < pageCount; i++) {
+                pages.add(new PageItem(i * 2, origin));
+            }
+        } else {
+            int pageCount = book.getPageCount();
+            for (int i = 0; i < pageCount; i++) {
+                pages.add(new PageItem(i, origin));
+            }
         }
+
         ObservableList<PageItem> names = FXCollections.observableArrayList(pages);
         thumbnail.setItems(names);
         thumbnail.getSelectionModel().select(index);
@@ -236,12 +243,12 @@ public class TwoFaceController implements Initializable {
         log.log(Level.INFO, "createPage: index={0} ({1})", new Object[]{index, origin});
         HBox hbox = new HBox();
         hbox.setAlignment(Pos.TOP_CENTER);
-        hbox.getChildren().addAll(createContent(index));
+        hbox.getChildren().addAll(createChildren(index));
         currentPane = hbox;
         return hbox;
     }
 
-    private List<Node> createContent(int index) {
+    private List<Node> createChildren(int index) {
         List<Node> children = new ArrayList<>();
 
         if (book == null) {
@@ -250,18 +257,23 @@ public class TwoFaceController implements Initializable {
             return children;
         }
 
-        Image leftImage = book.getImage(getPageIndex(index, rightProprty.not().get()));
-        Image rightImage = book.getImage(getPageIndex(index, rightProprty.get()));
-        log.log(Level.INFO, "createContent: left={0}, right={1}", new Object[]{leftImage, rightImage});
+        if (faceProperty.get()) {
+            Image leftImage = book.getImage(getPageIndex(index, rightProperty.not().get()));
+            Image rightImage = book.getImage(getPageIndex(index, rightProperty.get()));
+            log.log(Level.INFO, "createContent: left={0}, right={1}", new Object[]{leftImage, rightImage});
 
-        if (leftImage != null) {
-            Color color = leftImage.getPixelReader().getColor(0, 0);
-            log.log(Level.INFO, "color={0}", color);
-            // TODO 背景色をクロスフェード
-            children.add(wrapView(leftImage));
-        }
-        if (rightImage != null) {
-            children.add(wrapView(rightImage));
+            if (leftImage != null) {
+                Color color = leftImage.getPixelReader().getColor(0, 0);
+                log.log(Level.INFO, "color={0}", color);
+                // TODO 背景色をクロスフェード
+                children.add(wrapView(leftImage));
+            }
+            if (rightImage != null) {
+                children.add(wrapView(rightImage));
+            }
+        } else {
+            Image image = book.getImage(index);
+            children.add(wrapView(image));
         }
 
         return children;
@@ -329,7 +341,7 @@ public class TwoFaceController implements Initializable {
         book = BookFactory.getBook(file);
         fileProperty.set(file);
 
-        setCover(coverProprty.get());
+        updateIndex();
         thumbnail.getSelectionModel().select(0);
         thumbnail.requestFocus();
 
