@@ -20,3 +20,4 @@ nb-configuration.xml
 *.bak
 
 /nbproject/configs
+*.xml

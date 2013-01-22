@@ -32,7 +32,6 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableObjectValue;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -231,10 +230,45 @@ public class TwoFaceController implements Initializable {
         });
 
         bookProperty.bind(bookService.valueProperty());
+//        new ObjectBinding<Book>(){
+//            {
+//                super.bind(bookProperty);
+//            }
+//            
+//            @Override
+//            protected Book computeValue() {
+//                throw new UnsupportedOperationException("Not supported yet.");
+//            }
+//        };
+//        pagination.pageCountProperty().bind(new IntegerBinding(){
+//            {
+//                super.bind(bookProperty);
+//            }
+//            
+//            @Override
+//            protected int computeValue() {
+//                book = bookProperty.get();
+//                if (book == null) {
+//                    return -1;
+//                }
+//
+//                updateIndex();
+//                thumbnail.getSelectionModel().select(0);
+//                thumbnail.requestFocus();
+//
+//                int pageCount = book.getPageCount() / 2 * 2 + 1;
+//                log.log(Level.INFO, "pagination: {0} ({1})", new Object[]{book.getPageCount(), pageCount});
+////                pagination.setPageCount(pageCount);
+//                return pageCount;
+//            }
+//        });
         bookService.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
             @Override
             public void handle(WorkerStateEvent t) {
                 book = bookProperty.get();
+                if (book == null) {
+                    return;
+                }
 
                 updateIndex();
                 thumbnail.getSelectionModel().select(0);
