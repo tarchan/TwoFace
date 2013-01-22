@@ -21,15 +21,10 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.animation.FadeTransition;
-import javafx.animation.ParallelTransition;
-import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.BooleanProperty;
@@ -37,11 +32,14 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableObjectValue;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -51,7 +49,10 @@ import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Pagination;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.RadioMenuItem;
+import javafx.scene.control.TitledPane;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.effect.Reflection;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -61,10 +62,10 @@ import javafx.scene.input.ScrollEvent;
 import javafx.scene.input.SwipeEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.util.Callback;
-import javafx.util.Duration;
 
 /**
  * FXML Controller class
@@ -158,6 +159,8 @@ public class TwoFaceController implements Initializable {
         }
     };
     private ObjectProperty<File> fileProperty = new SimpleObjectProperty<>(this, "file");
+    private ObjectProperty<Book> bookProperty = new SimpleObjectProperty<>(this, "book");
+    private GetBookService bookService = new GetBookService();
     public StringBinding titleBinding;
     Pane currentPane;
     @FXML
@@ -170,6 +173,18 @@ public class TwoFaceController implements Initializable {
     private RadioMenuItem withCoverMenu;
     @FXML
     private RadioMenuItem rightDirectionMenu;
+    @FXML
+    private ToggleGroup faceGroup;
+    @FXML
+    private ToggleGroup originGroup;
+    @FXML
+    private ToggleGroup directionGroup;
+    @FXML
+    private TitledPane x1;
+    @FXML
+    private Region veil;
+    @FXML
+    private ProgressIndicator loading;
 
     /**
      * コントローラを初期化します。
@@ -214,6 +229,25 @@ public class TwoFaceController implements Initializable {
                 setCurrentPage(newValue);
             }
         });
+
+        bookProperty.bind(bookService.valueProperty());
+        bookService.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+            @Override
+            public void handle(WorkerStateEvent t) {
+                book = bookProperty.get();
+
+                updateIndex();
+                thumbnail.getSelectionModel().select(0);
+                thumbnail.requestFocus();
+
+                int pageCount = book.getPageCount() / 2 * 2 + 1;
+                log.log(Level.INFO, "pagination: {0} ({1})", new Object[]{book.getPageCount(), pageCount});
+                pagination.setPageCount(pageCount);
+            }
+        });
+        veil.visibleProperty().bind(bookService.runningProperty());
+        loading.visibleProperty().bind(bookService.runningProperty());
+        loading.progressProperty().bind(bookService.progressProperty());
 
         twoFaceMenu.selectedProperty().bindBidirectional(faceProperty);
         withCoverMenu.selectedProperty().bindBidirectional(coverProperty);
@@ -374,16 +408,43 @@ public class TwoFaceController implements Initializable {
 
     private void setFile(File file) throws IOException {
         log.log(Level.INFO, "ファイルを開きます。: {0}", file);
-        book = Books.read(file);
+//        book = Books.read(file);
         fileProperty.set(file);
+        bookService.restart();
 
-        updateIndex();
-        thumbnail.getSelectionModel().select(0);
-        thumbnail.requestFocus();
+//        updateIndex();
+//        thumbnail.getSelectionModel().select(0);
+//        thumbnail.requestFocus();
+//
+//        int pageCount = book.getPageCount() / 2 * 2 + 1;
+//        log.log(Level.INFO, "pagination: {0} ({1})", new Object[]{book.getPageCount(), pageCount});
+//        pagination.setPageCount(pageCount);
+    }
 
-        int pageCount = book.getPageCount() / 2 * 2 + 1;
-        log.log(Level.INFO, "pagination: {0} ({1})", new Object[]{book.getPageCount(), pageCount});
-        pagination.setPageCount(pageCount);
+    class GetBookService extends Service<Book> {
+
+        private File file;
+
+        @Override
+        protected Task<Book> createTask() {
+            file = fileProperty.get();
+            return new GetBookTask(file);
+        }
+    }
+
+    class GetBookTask extends Task<Book> {
+
+        private File file;
+
+        GetBookTask(File file) {
+            this.file = file;
+        }
+
+        @Override
+        protected Book call() throws Exception {
+            Book book = Books.read(file);
+            return book;
+        }
     }
 
     @FXML
@@ -455,7 +516,6 @@ public class TwoFaceController implements Initializable {
         log.log(Level.INFO, "handleSwipeUp: {0}", event);
     }
 
-    @FXML
     private void handleSwipeDown(SwipeEvent event) {
         log.log(Level.INFO, "handleSwipeDown: {0}", event);
     }
