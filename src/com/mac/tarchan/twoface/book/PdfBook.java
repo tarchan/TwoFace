@@ -37,7 +37,7 @@ public class PdfBook implements Book {
     private PDFFile pdfFile;
 
     @Override
-    public boolean canDecodeInput(File input) {
+    public boolean canDecodeInput(File input) throws IOException {
         try {
             read(input);
             return true;
@@ -46,15 +46,9 @@ public class PdfBook implements Book {
         }
     }
 
-    /**
-     * PdfBook オブジェクトを構築します。
-     * 
-     * @param file ファイル
-     * @throws IOException ファイルが読み込めない場合
-     */
     @Override
-    public void read(File file) throws IOException {
-        RandomAccessFile read = new RandomAccessFile(file, "r");
+    public void read(File input) throws IOException {
+        RandomAccessFile read = new RandomAccessFile(input, "r");
         FileChannel channel = read.getChannel();
         ByteBuffer buf = channel.map(FileChannel.MapMode.READ_ONLY, 0, channel.size());
         pdfFile = new PDFFile(buf);

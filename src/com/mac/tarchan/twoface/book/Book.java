@@ -32,7 +32,7 @@ public interface Book {
      * @param input 読み込み元の File
      * @return 復号化できる場合は true
      */
-    public boolean canDecodeInput(File input);
+    public boolean canDecodeInput(File input) throws IOException;
     
     /**
      * 指定された File を復号化します。

@@ -51,8 +51,8 @@ public class Books {
         ServiceLoader<Book> loader = ServiceLoader.load(Book.class);
         log.log(Level.INFO, "ServiceLoader: {0}", loader);
         for (Book book : loader) {
-            log.log(Level.INFO, "book: {0}", book.getClass().getName());
             if (book.canDecodeInput(file)) {
+                log.log(Level.INFO, "Book: {0}", book.getClass().getName());
                 book.read(file);
                 return book;
             }
