@@ -97,40 +97,46 @@
             </Menu>
           </menus>
         </MenuBar>
-        <SplitPane dividerPositions="0.20178926441351888" focusTraversable="true" prefHeight="593.0" prefWidth="1024.0" VBox.vgrow="ALWAYS">
-          <items>
-            <AnchorPane maxWidth="-Infinity" minHeight="0.0" minWidth="-Infinity" prefHeight="508.0" prefWidth="200.0">
-              <children>
-                <Accordion minWidth="200.0" prefHeight="661.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                  <expandedPane>
-                    <TitledPane fx:id="x1" animated="false" text="インデックス">
-                      <content>
-                        <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                          <children>
-                            <ListView fx:id="thumbnail" prefHeight="398.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                          </children>
-                        </AnchorPane>
-                      </content>
-                    </TitledPane>
-                  </expandedPane>
-                  <panes>
-                    <TitledPane animated="false" text="ライブラリ">
-                      <content>
-                        <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                      </content>
-                    </TitledPane>
-                    <fx:reference source="x1" />
-                  </panes>
-                </Accordion>
-              </children>
-            </AnchorPane>
-            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
-              <children>
-                <Pagination fx:id="pagination" onScrollStarted="#handleScrollStarted" onSwipeLeft="#handleSwipeLeft" onSwipeRight="#handleSwipeRight" onSwipeUp="#handleSwipeUp" opacity="1.0" pageCount="2147483647" prefHeight="766.0" prefWidth="816.0" styleClass="bullet" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-              </children>
-            </AnchorPane>
-          </items>
-        </SplitPane>
+        <StackPane id="StackPane" VBox.vgrow="ALWAYS">
+          <children>
+            <SplitPane dividerPositions="0.20178926441351888" focusTraversable="true" prefHeight="593.0" prefWidth="1024.0">
+              <items>
+                <AnchorPane maxWidth="-Infinity" minHeight="0.0" minWidth="-Infinity" prefHeight="508.0" prefWidth="200.0">
+                  <children>
+                    <Accordion minWidth="200.0" prefHeight="661.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                      <expandedPane>
+                        <TitledPane fx:id="x1" animated="false" text="インデックス">
+                          <content>
+                            <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                              <children>
+                                <ListView fx:id="thumbnail" prefHeight="398.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                              </children>
+                            </AnchorPane>
+                          </content>
+                        </TitledPane>
+                      </expandedPane>
+                      <panes>
+                        <TitledPane animated="false" text="ライブラリ">
+                          <content>
+                            <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                          </content>
+                        </TitledPane>
+                        <fx:reference source="x1" />
+                      </panes>
+                    </Accordion>
+                  </children>
+                </AnchorPane>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                  <children>
+                    <Pagination fx:id="pagination" onScrollStarted="#handleScrollStarted" onSwipeLeft="#handleSwipeLeft" onSwipeRight="#handleSwipeRight" onSwipeUp="#handleSwipeUp" opacity="1.0" pageCount="2147483647" prefHeight="766.0" prefWidth="816.0" styleClass="bullet" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                  </children>
+                </AnchorPane>
+              </items>
+            </SplitPane>
+            <Region fx:id="veil" prefHeight="683.0" prefWidth="1008.0" styleClass="veil" />
+            <ProgressIndicator fx:id="loading" progress="0.0" scaleX="1.0" scaleY="1.0" styleClass="loading" />
+          </children>
+        </StackPane>
       </children>
     </VBox>
   </children>
