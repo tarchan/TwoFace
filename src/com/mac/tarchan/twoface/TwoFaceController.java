@@ -16,7 +16,7 @@
 package com.mac.tarchan.twoface;
 
 import com.mac.tarchan.twoface.book.Book;
-import com.mac.tarchan.twoface.book.BookFactory;
+import com.mac.tarchan.twoface.book.Books;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -374,7 +374,7 @@ public class TwoFaceController implements Initializable {
 
     private void setFile(File file) throws IOException {
         log.log(Level.INFO, "ファイルを開きます。: {0}", file);
-        book = BookFactory.getBook(file);
+        book = Books.read(file);
         fileProperty.set(file);
 
         updateIndex();

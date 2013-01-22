@@ -15,6 +15,8 @@
  */
 package com.mac.tarchan.twoface.book;
 
+import java.io.File;
+import java.io.IOException;
 import javafx.scene.image.Image;
 
 /**
@@ -25,7 +27,23 @@ import javafx.scene.image.Image;
 public interface Book {
 
     /**
-     * この Book のページ数を返します。
+     * 指定された File を復号化できるかどうか判定します。
+     * 
+     * @param input 読み込み元の File
+     * @return 復号化できる場合は true
+     */
+    public boolean canDecodeInput(File input) throws IOException;
+    
+    /**
+     * 指定された File を復号化します。
+     * 
+     * @param input 読み込み元の File
+     * @throws IOException 読み込み中にエラーが発生した場合
+     */
+    public void read(File input) throws IOException;
+
+    /**
+     * 現在の Book のページ数を返します。
      *
      * @return ページ数
      */

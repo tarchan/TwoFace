@@ -40,14 +40,19 @@ public class ZipBook implements Book {
     private ZipFile zipFile;
     private List<ZipEntry> zipList;
 
-    /**
-     * ZipBook オブジェクトを構築します。
-     * 
-     * @param file ファイル
-     * @throws IOException ファイルが読み込めない場合
-     */
-    public ZipBook(File file) throws IOException {
-        zipFile = new ZipFile(file);
+    @Override
+    public boolean canDecodeInput(File input) throws IOException {
+        try {
+            new ZipFile(input);
+            return true;
+        } catch (IOException ex) {
+           return false;
+        }
+    }
+
+    @Override
+    public void read(File input) throws IOException {
+        zipFile = new ZipFile(input);
         Enumeration<? extends ZipEntry> entries = zipFile.entries();
         zipList = new ArrayList<>();
         while (entries.hasMoreElements()) {
