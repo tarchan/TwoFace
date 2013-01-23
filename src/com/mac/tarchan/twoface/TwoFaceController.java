@@ -195,6 +195,7 @@ public class TwoFaceController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         log.log(Level.INFO, "初期化します。: {0}", url);
+        log.log(Level.INFO, "javafx.version: {0}", System.getProperty("javafx.version"));
 
         fileChooser = new FileChooser();
         FileChooser.ExtensionFilter pdfFilter = new FileChooser.ExtensionFilter("PDF ファイル (*.pdf)", "*.pdf");
