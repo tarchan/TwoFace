@@ -20,3 +20,12 @@ nb-configuration.xml
 *.bak
 
 /nbproject/configs
+*.xml
+
+nbproject/jfx-impl_backup_3.xml
+
+nbproject/jfx-impl.xml
+
+nbproject/jfx-impl.xml
+
+nbproject/jfx-impl.xml

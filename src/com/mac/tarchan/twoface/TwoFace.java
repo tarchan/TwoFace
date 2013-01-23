@@ -48,8 +48,7 @@ public class TwoFace extends Application {
         Scene scene = new Scene(root);
 
         stage.setScene(scene);
-//        stage.titleProperty().bind(controller.titleBinding);
-        stage.titleProperty().bind(controller.titleProperty);
+        stage.titleProperty().bind(controller.titleProperty());
         stage.show();
     }
 

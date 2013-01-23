@@ -76,7 +76,8 @@ import javafx.util.Callback;
 public class TwoFaceController implements Initializable {
 
     private static final Logger log = Logger.getLogger(TwoFaceController.class.getName());
-    private FileChooser fileChooser = new FileChooser();;
+    private FileChooser fileChooser = new FileChooser();
+    ;
     private Book book;
     private ObjectProperty<Book> bookProperty = new SimpleObjectProperty<>(this, "book");
     private int origin = 0;
@@ -141,7 +142,6 @@ public class TwoFaceController implements Initializable {
     private ObjectProperty<File> fileProperty = new SimpleObjectProperty<>(this, "file");
     private GetBookService bookService = new GetBookService();
     public StringBinding titleBinding;
-    public StringProperty titleProperty = new SimpleStringProperty(this, "title");
     Pane currentPane;
     @FXML
     private ListView<PageItem> thumbnail;
@@ -165,6 +165,11 @@ public class TwoFaceController implements Initializable {
     private Region veil;
     @FXML
     private ProgressIndicator loading;
+    private StringProperty title = new SimpleStringProperty(this, "title");
+
+    public StringProperty titleProperty() {
+        return title;
+    }
 
     /**
      * コントローラを初期化します。
@@ -191,18 +196,7 @@ public class TwoFaceController implements Initializable {
             }
         });
 
-        titleBinding = new StringBinding() {
-            {
-                super.bind(fileProperty, thumbnail.getSelectionModel().selectedItemProperty());
-            }
-
-            @Override
-            protected String computeValue() {
-                log.log(Level.INFO, "titleBinding: {0} ({1})", new Object[]{fileProperty, thumbnail.getSelectionModel().selectedItemProperty()});
-                return fileProperty.isNull().get() ? "TwoFace" : String.format("(%s) %s - TwoFace", thumbnail.getSelectionModel().selectedItemProperty().get(), fileProperty.get().getName());
-            }
-        };
-        titleProperty.bind(new StringBinding() {
+        title.bind(new StringBinding() {
             {
                 super.bind(fileProperty, thumbnail.getSelectionModel().selectedItemProperty());
             }
