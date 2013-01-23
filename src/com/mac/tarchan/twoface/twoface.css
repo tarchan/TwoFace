@@ -18,26 +18,29 @@
 
 .pagination .page {
     -fx-background-color: black;
+    -fx-effect: dropshadow(gaussian, #000, 0, 0, 0, 0);
 }
 
 .pagination .page .label {
     -fx-text-fill: white;
 }
 
-.pagination .pagination-control {
-
+.pagination .pagination-control .control-box {
+    /*-fx-rotate: 45;*/
 }
 
 .imageview {
-    /*-fx-rotate: 45;*/
+    -fx-rotate: 45;
     /*-fx-effect: dropshadow(gaussian, #000, 0, 0, 0, 0);*/
+    -fx-effect: reflection(0);
 }
 
 .veil {
-    -fx-background-color: rgba(0, 0, 0, 0.4)
+    -fx-background-color: rgba(0, 0, 0, 0.4);
 }
 
 .loading {
     -fx-scale-x: 0.1;
     -fx-scale-y: 0.1;
+    -fx-alignment: bottom-right;
 }

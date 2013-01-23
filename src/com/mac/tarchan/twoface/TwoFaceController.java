@@ -141,6 +141,7 @@ public class TwoFaceController implements Initializable {
     private ObjectProperty<File> fileProperty = new SimpleObjectProperty<>(this, "file");
     private GetBookService bookService = new GetBookService();
     public StringBinding titleBinding;
+    public StringProperty titleProperty = new SimpleStringProperty(this, "title");
     Pane currentPane;
     @FXML
     private ListView<PageItem> thumbnail;
@@ -201,6 +202,17 @@ public class TwoFaceController implements Initializable {
                 return fileProperty.isNull().get() ? "TwoFace" : String.format("(%s) %s - TwoFace", thumbnail.getSelectionModel().selectedItemProperty().get(), fileProperty.get().getName());
             }
         };
+        titleProperty.bind(new StringBinding() {
+            {
+                super.bind(fileProperty, thumbnail.getSelectionModel().selectedItemProperty());
+            }
+
+            @Override
+            protected String computeValue() {
+                log.log(Level.INFO, "titleBinding: {0} ({1})", new Object[]{fileProperty, thumbnail.getSelectionModel().selectedItemProperty()});
+                return fileProperty.isNull().get() ? "TwoFace" : String.format("(%s) %s - TwoFace", thumbnail.getSelectionModel().selectedItemProperty().get(), fileProperty.get().getName());
+            }
+        });
 
         thumbnail.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<PageItem>() {
             @Override
