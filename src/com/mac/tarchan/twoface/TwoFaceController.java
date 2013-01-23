@@ -59,6 +59,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.input.SwipeEvent;
 import javafx.scene.layout.HBox;
@@ -193,6 +194,20 @@ public class TwoFaceController implements Initializable {
             @Override
             public Node call(Integer index) {
                 return createPage(index);
+            }
+        });
+        pagination.setOnMouseEntered(new EventHandler<MouseEvent>() {
+
+            @Override
+            public void handle(MouseEvent t) {
+                pagination.getStyleClass().removeAll("hidden");
+            }
+        });
+        pagination.setOnMouseExited(new EventHandler<MouseEvent>() {
+
+            @Override
+            public void handle(MouseEvent t) {
+                pagination.getStyleClass().add("hidden");
             }
         });
 

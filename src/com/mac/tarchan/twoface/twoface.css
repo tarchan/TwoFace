@@ -18,11 +18,20 @@
 
 .pagination .page {
     -fx-background-color: black;
-    -fx-effect: dropshadow(gaussian, #000, 0, 0, 0, 0);
+    /*-fx-rotate: 45;*/
+    /*-fx-effect: dropshadow(gaussian, #000, 0, 0, 0, 0);*/
+}
+
+.pagination-control {
+    visibility: visible;
+}
+
+.hidden .pagination-control {
+    visibility: hidden;
 }
 
 .pagination .page .label {
-    -fx-text-fill: white;
+    /*-fx-text-fill: white;*/
 }
 
 .pagination .pagination-control .control-box {
@@ -30,9 +39,9 @@
 }
 
 .imageview {
-    -fx-rotate: 45;
+    /*-fx-rotate: 45;*/
     /*-fx-effect: dropshadow(gaussian, #000, 0, 0, 0, 0);*/
-    -fx-effect: reflection(0);
+    /*-fx-effect: reflection(0);*/
 }
 
 .veil {
