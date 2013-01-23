@@ -17,7 +17,7 @@
 }
 
 .pagination .page {
-    -fx-background-color: dodgerblue;
+    -fx-background-color: black;
 }
 
 .pagination .page .label {
