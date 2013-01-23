@@ -31,8 +31,9 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableObjectValue;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -75,54 +76,33 @@ import javafx.util.Callback;
 public class TwoFaceController implements Initializable {
 
     private static final Logger log = Logger.getLogger(TwoFaceController.class.getName());
-    private FileChooser fileChooser;
+    private FileChooser fileChooser = new FileChooser();;
     private Book book;
+    private ObjectProperty<Book> bookProperty = new SimpleObjectProperty<>(this, "book");
     private int origin = 0;
     private Exception lastError;
     private BooleanProperty faceProperty = new SimpleBooleanProperty(this, "face", true) {
         @Override
-        public boolean get() {
-            log.log(Level.INFO, "faceProperty.get: {0}", super.get());
-            return super.get();
-        }
-
-        @Override
-        public void set(boolean value) {
-            log.log(Level.INFO, "faceProperty.set: {0}", value);
-            super.set(value);
+        protected void invalidated() {
+            log.log(Level.INFO, "faceProperty: {0}", get());
             updateIndex();
-            pagination.requestLayout();
+//            pagination.requestLayout();
         }
     };
     private BooleanProperty coverProperty = new SimpleBooleanProperty(this, "cover", true) {
         @Override
-        public boolean get() {
-            log.log(Level.INFO, "coverProperty.get: {0}", super.get());
-            return super.get();
-        }
-
-        @Override
-        public void set(boolean value) {
-            log.log(Level.INFO, "coverProperty.set: {0}", value);
-            super.set(value);
+        protected void invalidated() {
+            log.log(Level.INFO, "coverProperty: {0}", get());
             updateIndex();
-            pagination.requestLayout();
+//            pagination.requestLayout();
             currentPane.getChildren().removeAll(currentPane.getChildren());
             currentPane.getChildren().addAll(createChildren(pagination.getCurrentPageIndex()));
         }
     };
     private BooleanProperty rightProperty = new SimpleBooleanProperty(this, "right", true) {
         @Override
-        public boolean get() {
-            log.log(Level.INFO, "rightProperty.get: {0}", super.get());
-            return super.get();
-        }
-
-        @Override
-        public void set(boolean value) {
-            log.log(Level.INFO, "rightProperty.set: {0}", value);
-            super.set(value);
-            pagination.requestLayout();
+        protected void invalidated() {
+            log.log(Level.INFO, "coverProperty: {0}", get());
             if (currentPane.getChildren().size() == 2) {
                 final Node[] children = new Node[2];
                 currentPane.getChildren().toArray(children);
@@ -159,7 +139,6 @@ public class TwoFaceController implements Initializable {
         }
     };
     private ObjectProperty<File> fileProperty = new SimpleObjectProperty<>(this, "file");
-    private ObjectProperty<Book> bookProperty = new SimpleObjectProperty<>(this, "book");
     private GetBookService bookService = new GetBookService();
     public StringBinding titleBinding;
     Pane currentPane;
@@ -197,7 +176,6 @@ public class TwoFaceController implements Initializable {
         log.log(Level.INFO, "初期化します。: {0}", url);
         log.log(Level.INFO, "javafx.version: {0}", System.getProperty("javafx.version"));
 
-        fileChooser = new FileChooser();
         FileChooser.ExtensionFilter pdfFilter = new FileChooser.ExtensionFilter("PDF ファイル (*.pdf)", "*.pdf");
         FileChooser.ExtensionFilter zipFilter = new FileChooser.ExtensionFilter("ZIP ファイル (*.zip)", "*.zip");
         FileChooser.ExtensionFilter allFilter = new FileChooser.ExtensionFilter("すべてのファイル (*.*)", "*.*");
