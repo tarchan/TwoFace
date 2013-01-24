@@ -416,12 +416,12 @@ public class TwoFaceController implements Initializable {
             Parent dialog = (Parent) fxml.load();
             ErrorDialogController error = fxml.getController();
             error.messageProperty().set(String.format("%s%n%s", message, ex.getMessage()));
+            error.titleProperty().set("エラー");
 
             Stage stage = new Stage();
             stage.initModality(Modality.WINDOW_MODAL);
             stage.initOwner(root.getScene().getWindow());
             stage.setScene(new Scene(dialog));
-            stage.setTitle("エラー");
             stage.show();
         } catch (IOException ex1) {
 //            Logger.getLogger(TwoFaceController.class.getName()).log(Level.SEVERE, null, ex1);

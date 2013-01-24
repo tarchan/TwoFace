@@ -17,6 +17,9 @@ package com.mac.tarchan.twoface;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -42,12 +45,26 @@ public class ErrorDialogController implements Initializable {
     private ImageView icon;
     @FXML
     private Button close;
+    private StringProperty title = new SimpleStringProperty(this, "title");
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        error.sceneProperty().addListener(new InvalidationListener() {
+            @Override
+            public void invalidated(Observable o) {
+                Stage stage = (Stage) error.getScene().getWindow();
+                if (stage != null) {
+                    stage.titleProperty().bind(title);
+                }
+            }
+        });
+    }
+
+    public StringProperty titleProperty() {
+        return title;
     }
 
     public StringProperty messageProperty() {

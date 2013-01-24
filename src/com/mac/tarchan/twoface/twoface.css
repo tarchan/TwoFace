@@ -55,7 +55,7 @@
 }
 
 #error {
-    -fx-background-color: gray;
+    -fx-background-color: -fx-focus-color, -fx-outer-border, -fx-inner-border, -fx-body-color;
 }
 
 #error > #message {
