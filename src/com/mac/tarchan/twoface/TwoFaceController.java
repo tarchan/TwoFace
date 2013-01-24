@@ -399,11 +399,16 @@ public class TwoFaceController implements Initializable {
         } catch (IOException ex) {
             log.log(Level.SEVERE, "ファイルを読み込めません。", ex);
             lastError = ex;
-            // TODO エラーダイアログを表示する
             showError("ファイルを読み込めません。", ex);
         }
     }
 
+    /**
+     * エラーダイアログを表示します。
+     * 
+     * @param message エラーメッセージ
+     * @param ex 例外
+     */
     private void showError(String message, Exception ex) {
         try {
             log.log(Level.INFO, "Window: {0}", root.getScene().getWindow().getClass());
@@ -411,11 +416,11 @@ public class TwoFaceController implements Initializable {
             Parent dialog = (Parent) fxml.load();
             ErrorDialogController error = fxml.getController();
             error.messageProperty().set(String.format("%s%n%s", message, ex.getMessage()));
+
             Stage stage = new Stage();
-            Scene scene = new Scene(dialog);
             stage.initModality(Modality.WINDOW_MODAL);
             stage.initOwner(root.getScene().getWindow());
-            stage.setScene(scene);
+            stage.setScene(new Scene(dialog));
             stage.setTitle("エラー");
             stage.show();
         } catch (IOException ex1) {

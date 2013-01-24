@@ -8,11 +8,15 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" fx:id="error" prefHeight="200.0" prefWidth="500.0" styleClass="mainFxmlClass" xmlns:fx="http://javafx.com/fxml" fx:controller="com.mac.tarchan.twoface.ErrorDialogController">
+<AnchorPane fx:id="error" prefHeight="200.0" prefWidth="500.0" styleClass="mainFxmlClass" xmlns:fx="http://javafx.com/fxml" fx:controller="com.mac.tarchan.twoface.ErrorDialogController">
   <children>
+    <Button id="ok" fx:id="close" mnemonicParsing="false" onAction="#handleClose" text="閉じる" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="14.0" />
+    <ImageView fx:id="icon" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="36.0">
+      <image>
+        <Image url="@bg_tile.jpg" preserveRatio="false" smooth="false" />
+      </image>
+    </ImageView>
     <TextArea fx:id="message" editable="false" prefHeight="144.0" prefWidth="400.0" promptText="メッセージ" wrapText="true" AnchorPane.bottomAnchor="42.0" AnchorPane.leftAnchor="86.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0" />
-    <ImageView fx:id="icon" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="36.0" />
-    <Button id="ok" fx:id="close" mnemonicParsing="false" text="閉じる" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="14.0" />
   </children>
   <stylesheets>
     <URL value="@twoface.css" />
