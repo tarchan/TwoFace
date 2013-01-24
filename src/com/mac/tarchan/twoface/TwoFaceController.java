@@ -18,6 +18,7 @@ package com.mac.tarchan.twoface;
 import com.mac.tarchan.twoface.book.Book;
 import com.mac.tarchan.twoface.book.Books;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -43,10 +44,12 @@ import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Pagination;
@@ -68,6 +71,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 
 /**
@@ -237,6 +242,9 @@ public class TwoFaceController implements Initializable {
             @Override
             public void handle(WorkerStateEvent t) {
                 book = bookProperty.get();
+                if (book == null) {
+                    return;
+                }
 
                 updateIndex();
                 thumbnail.getSelectionModel().select(0);
@@ -381,15 +389,41 @@ public class TwoFaceController implements Initializable {
 
             File file = param != null ? new File(param) : fileChooser.showOpenDialog(null);
             if (file != null) {
-                setFile(file);
+                if (file.exists())
+                {
+                    setFile(file);
+                } else {
+                    throw new FileNotFoundException(String.format("%s が見つかりません。", file));
+                }
             }
         } catch (IOException ex) {
             log.log(Level.SEVERE, "ファイルを読み込めません。", ex);
             lastError = ex;
             // TODO エラーダイアログを表示する
+            showError("ファイルを読み込めません。", ex);
         }
     }
 
+    private void showError(String message, Exception ex) {
+        try {
+            log.log(Level.INFO, "Window: {0}", root.getScene().getWindow().getClass());
+            FXMLLoader fxml = new FXMLLoader(getClass().getResource("ErrorDialog.fxml"));
+            Parent dialog = (Parent) fxml.load();
+            ErrorDialogController error = fxml.getController();
+            error.messageProperty().set(String.format("%s%n%s", message, ex.getMessage()));
+            Stage stage = new Stage();
+            Scene scene = new Scene(dialog);
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initOwner(root.getScene().getWindow());
+            stage.setScene(scene);
+            stage.setTitle("エラー");
+            stage.show();
+        } catch (IOException ex1) {
+//            Logger.getLogger(TwoFaceController.class.getName()).log(Level.SEVERE, null, ex1);
+            log.log(Level.SEVERE, "ダイアログを表示できません。", ex1);
+        }
+    }
+    
     private void setFile(File file) throws IOException {
         log.log(Level.INFO, "ファイルを開きます。: {0}", file);
 //        book = Books.read(file);
