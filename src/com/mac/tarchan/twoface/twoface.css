@@ -23,11 +23,11 @@
 }
 
 .pagination-control {
-    visibility: visible;
+    -fx-opacity: 1.0;
 }
 
 .hidden .pagination-control {
-    visibility: hidden;
+    -fx-opacity: 0.0;
 }
 
 .pagination .page .label {
