@@ -62,6 +62,7 @@ import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.input.SwipeEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
@@ -78,7 +79,6 @@ public class TwoFaceController implements Initializable {
 
     private static final Logger log = Logger.getLogger(TwoFaceController.class.getName());
     private FileChooser fileChooser = new FileChooser();
-    ;
     private Book book;
     private ObjectProperty<Book> bookProperty = new SimpleObjectProperty<>(this, "book");
     private int origin = 0;
@@ -104,7 +104,7 @@ public class TwoFaceController implements Initializable {
     private BooleanProperty rightProperty = new SimpleBooleanProperty(this, "right", true) {
         @Override
         protected void invalidated() {
-            log.log(Level.INFO, "coverProperty: {0}", get());
+            log.log(Level.INFO, "rightProperty: {0}", get());
             if (currentPane.getChildren().size() == 2) {
                 final Node[] children = new Node[2];
                 currentPane.getChildren().toArray(children);
@@ -167,6 +167,8 @@ public class TwoFaceController implements Initializable {
     @FXML
     private ProgressIndicator loading;
     private StringProperty title = new SimpleStringProperty(this, "title");
+    @FXML
+    private AnchorPane root;
 
     public StringProperty titleProperty() {
         return title;
@@ -369,29 +371,11 @@ public class TwoFaceController implements Initializable {
         return view;
     }
 
-    /**
-     * root 要素を取得します。
-     *
-     * @return root 要素
-     */
-    private Parent getRoot() {
-        Parent root = pagination.getParent();
-        while (root.getParent() != null) {
-            log.log(Level.INFO, "parent={0}", root.getClass());
-            log.log(Level.INFO, "userData={0}", root.getUserData());
-            root = root.getParent();
-        }
-        log.log(Level.INFO, "root={0}", root.getClass());
-        log.log(Level.INFO, "userData={0}", root.getUserData());
-        return root;
-    }
-
     @FXML
     private void handleOpen(ActionEvent event) {
         try {
             log.log(Level.INFO, "ファイルを選択します。");
 
-            Parent root = getRoot();
             String param = (String) root.getUserData();
             log.log(Level.INFO, "パラメータ={0}", param);
 
