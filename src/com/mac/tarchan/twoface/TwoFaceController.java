@@ -69,6 +69,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
@@ -320,6 +321,13 @@ public class TwoFaceController implements Initializable {
      */
     private Node createPage(Integer index) {
         log.log(Level.INFO, "createPage: index={0} ({1})", new Object[]{index, origin});
+        if (book == null) {
+            StackPane stack = new StackPane();
+            Label label = new Label(lastError != null ? "ファイルを読み込めません。: " + lastError : "ファイルを選択してください。");
+            stack.getChildren().add(label);
+            return stack;
+        }
+
         HBox hbox = new HBox();
         hbox.setAlignment(Pos.TOP_CENTER);
         hbox.getChildren().addAll(createChildren(index));
@@ -330,11 +338,11 @@ public class TwoFaceController implements Initializable {
     private List<Node> createChildren(int index) {
         List<Node> children = new ArrayList<>();
 
-        if (book == null) {
-            Label label = new Label(lastError != null ? "ファイルを読み込めません。: " + lastError : "ファイルを選択してください。");
-            children.add(label);
-            return children;
-        }
+//        if (book == null) {
+//            Label label = new Label(lastError != null ? "ファイルを読み込めません。: " + lastError : "ファイルを選択してください。");
+//            children.add(label);
+//            return children;
+//        }
 
         if (faceProperty.get()) {
             Image leftImage = book.getImage(getPageIndex(index, rightProperty.not().get()));

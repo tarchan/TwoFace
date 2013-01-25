@@ -31,7 +31,7 @@
 }
 
 .pagination .page .label {
-    /*-fx-text-fill: white;*/
+    -fx-text-fill: white;
 }
 
 .pagination .pagination-control .control-box {
