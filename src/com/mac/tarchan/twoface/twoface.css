@@ -23,11 +23,12 @@
 }
 
 .pagination-control {
+    /*-fx-background-color: black;*/
     -fx-opacity: 1.0;
 }
 
 .hidden .pagination-control {
-    -fx-opacity: 0.0;
+    /*-fx-opacity: 0.0;*/
 }
 
 .pagination .page .label {
