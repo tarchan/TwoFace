@@ -21,3 +21,4 @@ nb-configuration.xml
 
 /nbproject/configs
 *.xml
+nbproject/*.xml

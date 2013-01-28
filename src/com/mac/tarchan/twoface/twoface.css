@@ -17,27 +17,48 @@
 }
 
 .pagination .page {
-    -fx-background-color: dodgerblue;
+    -fx-background-color: black;
+    /*-fx-rotate: 45;*/
+    /*-fx-effect: dropshadow(gaussian, #000, 0, 0, 0, 0);*/
+}
+
+.pagination-control {
+    /*-fx-background-color: black;*/
+    -fx-opacity: 1.0;
+}
+
+.hidden .pagination-control {
+    /*-fx-opacity: 0.0;*/
 }
 
 .pagination .page .label {
     -fx-text-fill: white;
 }
 
-.pagination .pagination-control {
-
+.pagination .pagination-control .control-box {
+    /*-fx-rotate: 45;*/
 }
 
 .imageview {
     /*-fx-rotate: 45;*/
     /*-fx-effect: dropshadow(gaussian, #000, 0, 0, 0, 0);*/
+    /*-fx-effect: reflection(0);*/
 }
 
 .veil {
-    -fx-background-color: rgba(0, 0, 0, 0.4)
+    -fx-background-color: rgba(0, 0, 0, 0.4);
 }
 
 .loading {
     -fx-scale-x: 0.1;
     -fx-scale-y: 0.1;
+    -fx-alignment: bottom-right;
+}
+
+#error {
+    -fx-background-color: -fx-focus-color, -fx-outer-border, -fx-inner-border, -fx-body-color;
+}
+
+#error > #message {
+    /*-fx-border-color: null;*/
 }
